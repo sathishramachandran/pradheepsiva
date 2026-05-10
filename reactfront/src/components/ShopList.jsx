@@ -5,7 +5,10 @@ function ShopList() {
 
   const [shops, setShops] = useState([]);
 
-  // GET ALL SHOPS
+  /* =========================
+     GET ALL SHOPS
+  ========================= */
+
   const getShops = async () => {
 
     try {
@@ -14,7 +17,10 @@ function ShopList() {
         "https://pradheepsiva.onrender.com/api/shop/all"
       );
 
-      setShops(response.data);
+      console.log(response.data);
+
+      // IMPORTANT FIX
+      setShops(response.data.data || []);
 
     } catch (error) {
 
@@ -23,7 +29,10 @@ function ShopList() {
     }
   };
 
-  // DELETE SHOP
+  /* =========================
+     DELETE SHOP
+  ========================= */
+
   const deleteShop = async (id) => {
 
     try {
@@ -33,7 +42,9 @@ function ShopList() {
       );
 
       setShops(
-        shops.filter((shop) => shop._id !== id)
+        shops.filter(
+          (shop) => shop._id !== id
+        )
       );
 
       alert("Shop Removed Successfully");
@@ -45,13 +56,23 @@ function ShopList() {
     }
   };
 
-  // EDIT SHOP
+  /* =========================
+     EDIT SHOP
+  ========================= */
+
   const editShop = async (id) => {
 
-    const shopName = prompt("Enter Shop Name");
-    const ownerName = prompt("Enter Owner Name");
-    const mobileNumber = prompt("Enter Mobile Number");
-    const address = prompt("Enter Address");
+    const shopName =
+      prompt("Enter Shop Name");
+
+    const ownerName =
+      prompt("Enter Owner Name");
+
+    const mobileNumber =
+      prompt("Enter Mobile Number");
+
+    const address =
+      prompt("Enter Address");
 
     try {
 
@@ -65,7 +86,7 @@ function ShopList() {
         }
       );
 
-      alert("Shop Updated");
+      alert("Shop Updated Successfully");
 
       getShops();
 
@@ -76,9 +97,19 @@ function ShopList() {
     }
   };
 
+  /* =========================
+     USE EFFECT
+  ========================= */
+
   useEffect(() => {
+
     getShops();
+
   }, []);
+
+  /* =========================
+     UI
+  ========================= */
 
   return (
 
@@ -92,6 +123,7 @@ function ShopList() {
 
       ) : (
 
+        Array.isArray(shops) &&
         shops.map((shop) => (
 
           <div
@@ -99,29 +131,40 @@ function ShopList() {
             key={shop._id}
           >
 
-            <h3>{shop.shopName}</h3>
+            <h3>
+              {shop.shopName}
+            </h3>
 
             <p>
-              Owner Name : {shop.ownerName}
+              Owner Name :
+              {shop.ownerName}
             </p>
 
             <p>
-              Mobile Number : {shop.mobileNumber}
+              Mobile Number :
+              {shop.mobileNumber}
             </p>
 
             <p>
-              Address : {shop.address}
+              Address :
+              {shop.address}
             </p>
 
+            {/* DELETE BUTTON */}
             <button
-              onClick={() => deleteShop(shop._id)}
+              onClick={() =>
+                deleteShop(shop._id)
+              }
               className="delete-btn"
             >
               Remove
             </button>
 
+            {/* EDIT BUTTON */}
             <button
-              onClick={() => editShop(shop._id)}
+              onClick={() =>
+                editShop(shop._id)
+              }
               className="edit-btn"
             >
               Edit
