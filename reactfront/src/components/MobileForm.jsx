@@ -213,37 +213,38 @@ function MobileForm() {
           <option value="mic">
             Mic
           </option>
-            <option value="water lock">
+          
+      
+        <option value="water lock">
             water lock
           </option>
-          </option>
-            <option value="other">
-            other
-          </option>
+        <option value="other">
+          other
+        </option>
 
-        </select>
+      </select>
 
-        {/* ENTRY DATE */}
+      {/* ENTRY DATE */}
 
-        <input
-          type="date"
-          name="entryDate"
-          value={mobileData.entryDate}
-          onChange={handleChange}
-          required
-        />
+      <input
+        type="date"
+        name="entryDate"
+        value={mobileData.entryDate}
+        onChange={handleChange}
+        required
+      />
 
-        {/* SUBMIT BUTTON */}
+      {/* SUBMIT BUTTON */}
 
-        <button type="submit">
+      <button type="submit">
 
-          Submit
+        Submit
 
-        </button>
+      </button>
 
-      </form>
+    </form>
 
-    </section>
+    </section >
   );
 }
 
