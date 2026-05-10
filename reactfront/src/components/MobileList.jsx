@@ -5,7 +5,10 @@ function MobileList() {
 
   const [mobiles, setMobiles] = useState([]);
 
-  // GET ALL MOBILES
+  /* =========================
+     GET ALL MOBILES
+  ========================= */
+
   const getMobiles = async () => {
 
     try {
@@ -14,11 +17,16 @@ function MobileList() {
         "https://pradheepsiva.onrender.com/api/mobile/all"
       );
 
-      setMobiles(response.data.data);
+      console.log(response.data);
+
+      // SAFE ARRAY FIX
+      setMobiles(response.data.data || []);
 
     } catch (error) {
 
       console.log(error);
+
+      setMobiles([]);
 
     }
   };
@@ -29,7 +37,10 @@ function MobileList() {
 
   }, []);
 
-  // DELETE MOBILE
+  /* =========================
+     DELETE MOBILE
+  ========================= */
+
   const deleteMobile = async (id) => {
 
     try {
@@ -49,8 +60,14 @@ function MobileList() {
     }
   };
 
-  // UPDATE STATUS
-  const updateStatus = async (id, status) => {
+  /* =========================
+     UPDATE STATUS
+  ========================= */
+
+  const updateStatus = async (
+    id,
+    status
+  ) => {
 
     try {
 
@@ -70,26 +87,37 @@ function MobileList() {
     }
   };
 
-  // GROUP BY SHOP NAME
-  const groupedMobiles = mobiles.reduce(
+  /* =========================
+     GROUP BY SHOP NAME
+  ========================= */
 
-    (groups, mobile) => {
+  const groupedMobiles = Array.isArray(mobiles)
 
-      if (!groups[mobile.shopName]) {
+    ? mobiles.reduce(
 
-        groups[mobile.shopName] = [];
+        (groups, mobile) => {
 
-      }
+          if (!groups[mobile.shopName]) {
 
-      groups[mobile.shopName].push(mobile);
+            groups[mobile.shopName] = [];
 
-      return groups;
+          }
 
-    },
+          groups[mobile.shopName].push(mobile);
 
-    {}
+          return groups;
 
-  );
+        },
+
+        {}
+
+      )
+
+    : {};
+
+  /* =========================
+     UI
+  ========================= */
 
   return (
 
@@ -101,179 +129,219 @@ function MobileList() {
 
       {
 
-        Object.keys(groupedMobiles).map((shopName) => (
+        Object.keys(groupedMobiles).length === 0
 
-          <div
-            key={shopName}
-            className="shop-section"
-          >
+          ? (
 
-            {/* SHOP TITLE */}
-
-            <h2 className="shop-title">
-              {shopName}
+            <h2>
+              No Mobiles Found
             </h2>
 
-            {/* MOBILE LIST */}
+          )
 
-            {
+          : (
 
-              groupedMobiles[shopName].map((mobile) => (
+            Object.keys(groupedMobiles).map(
+
+              (shopName) => (
 
                 <div
-                  className="mobile-card"
-                  key={mobile._id}
+                  key={shopName}
+                  className="shop-section"
                 >
 
-                  <p>
-                    <strong>Brand :</strong>
-                    {mobile.mobileBrand}
-                  </p>
+                  {/* SHOP TITLE */}
 
-                  <p>
-                    <strong>Model :</strong>
-                    {mobile.mobileModel}
-                  </p>
+                  <h2 className="shop-title">
+                    {shopName}
+                  </h2>
 
-                  <p>
-                    <strong>Issue :</strong>
-                    {mobile.mobileIssue}
-                  </p>
+                  {/* MOBILE LIST */}
 
-                  <p>
-                    <strong>Entry Date :</strong>
-                    {mobile.entryDate}
-                  </p>
+                  {
 
-                  <p>
-                    <strong>Status :</strong>
-                    {mobile.status}
-                  </p>
+                    groupedMobiles[
+                      shopName
+                    ].map((mobile) => (
 
-                  {/* REMAINING DAYS */}
+                      <div
+                        className="mobile-card"
+                        key={mobile._id}
+                      >
 
-                  {/* <p
-                    style={{
-                      color:
-                        mobile.remainingDays === 0
-                          ? "red"
-                          : mobile.remainingDays === 1
-                          ? "orange"
-                          : "green",
-                      fontWeight: "bold",
-                      fontSize: "18px",
-                    }}
-                  >
+                        <p>
+                          <strong>
+                            Brand :
+                          </strong>
 
-                    {
-                      mobile.remainingDays > 0
-                        ? `Remaining : ${mobile.remainingDays} Days`
-                        : "⚠ Delivery Date Over"
-                    }
+                          {" "}
 
-                  </p> */}
-                  <p
-  style={{
-    color:
-      mobile.remainingDays === 3
-        ? "green"
-        : mobile.remainingDays === 2
-        ? "lime"
-        : mobile.remainingDays === 1
-        ? "orange"
-        : "red",
+                          {mobile.mobileBrand}
+                        </p>
 
-    fontWeight: "bold",
-    fontSize: "18px",
-  }}
->
+                        <p>
+                          <strong>
+                            Model :
+                          </strong>
 
-  {
-    mobile.remainingDays === 3
-      ? "🟢 3 Days Remaining"
+                          {" "}
 
-      : mobile.remainingDays === 2
-      ? "🟡 2 Days Remaining"
+                          {mobile.mobileModel}
+                        </p>
 
-      : mobile.remainingDays === 1
-      ? "🟠 1 Day Remaining"
+                        <p>
+                          <strong>
+                            Issue :
+                          </strong>
 
-      : "🔴 Delivery Date Over"
-  }
+                          {" "}
 
-</p>
+                          {mobile.mobileIssue}
+                        </p>
 
-                  {/* STATUS BUTTONS */}
+                        <p>
+                          <strong>
+                            Entry Date :
+                          </strong>
 
-                  <div className="btn-group">
+                          {" "}
 
-                    <button
-                      className="pending-btn"
-                      onClick={() =>
-                        updateStatus(
-                          mobile._id,
-                          "Pending"
-                        )
-                      }
-                    >
-                      Pending
-                    </button>
-                       <button
-                      className="return-btn"
-                      onClick={() =>
-                        updateStatus(
-                          mobile._id,
-                          "Return"
-                        )
-                      }
-                    >
-                      Return
-                    </button>
+                          {mobile.entryDate}
+                        </p>
 
-                    <button
-                      className="complete-btn"
-                      onClick={() =>
-                        updateStatus(
-                          mobile._id,
-                          "Completed"
-                        )
-                      }
-                    >
-                      Completed
-                    </button>
-                      <button
-                      className="complete-btn"
-                      onClick={() =>
-                        updateStatus(
-                          mobile._id,
-                          "Out Delivery"
-                        )
-                      }
-                    >
-                     Out Delivery 
-                    </button>
+                        <p>
+                          <strong>
+                            Status :
+                          </strong>
 
-                    <button
-                      className="delete-btn"
-                      onClick={() =>
-                        deleteMobile(mobile._id)
-                      }
-                    >
-                      Delete
-                    </button>
-                  
+                          {" "}
 
-                  </div>
+                          {mobile.status}
+                        </p>
+
+                        {/* REMAINING DAYS */}
+
+                        <p
+                          style={{
+                            color:
+
+                              mobile.remainingDays === 3
+                                ? "green"
+
+                                : mobile.remainingDays === 2
+                                ? "lime"
+
+                                : mobile.remainingDays === 1
+                                ? "orange"
+
+                                : "red",
+
+                            fontWeight:
+                              "bold",
+
+                            fontSize:
+                              "18px",
+                          }}
+                        >
+
+                          {
+
+                            mobile.remainingDays === 3
+
+                              ? "🟢 3 Days Remaining"
+
+                              : mobile.remainingDays === 2
+
+                              ? "🟡 2 Days Remaining"
+
+                              : mobile.remainingDays === 1
+
+                              ? "🟠 1 Day Remaining"
+
+                              : "🔴 Delivery Date Over"
+
+                          }
+
+                        </p>
+
+                        {/* BUTTONS */}
+
+                        <div className="btn-group">
+
+                          <button
+                            className="pending-btn"
+                            onClick={() =>
+                              updateStatus(
+                                mobile._id,
+                                "Pending"
+                              )
+                            }
+                          >
+                            Pending
+                          </button>
+
+                          <button
+                            className="return-btn"
+                            onClick={() =>
+                              updateStatus(
+                                mobile._id,
+                                "Return"
+                              )
+                            }
+                          >
+                            Return
+                          </button>
+
+                          <button
+                            className="complete-btn"
+                            onClick={() =>
+                              updateStatus(
+                                mobile._id,
+                                "Completed"
+                              )
+                            }
+                          >
+                            Completed
+                          </button>
+
+                          <button
+                            className="complete-btn"
+                            onClick={() =>
+                              updateStatus(
+                                mobile._id,
+                                "Out Delivery"
+                              )
+                            }
+                          >
+                            Out Delivery
+                          </button>
+
+                          <button
+                            className="delete-btn"
+                            onClick={() =>
+                              deleteMobile(
+                                mobile._id
+                              )
+                            }
+                          >
+                            Delete
+                          </button>
+
+                        </div>
+
+                      </div>
+
+                    ))
+
+                  }
 
                 </div>
 
-              ))
+              )
 
-            }
+            )
 
-          </div>
-
-        ))
+          )
 
       }
 
