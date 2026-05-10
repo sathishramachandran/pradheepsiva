@@ -11,38 +11,66 @@ function MobileForm() {
     entryDate: "",
   });
 
-  // DYNAMIC SHOPS
+  /* =========================
+     DYNAMIC SHOPS
+  ========================= */
+
   const [shops, setShops] = useState([]);
 
-  // GET SHOPS FROM BACKEND
+  /* =========================
+     GET SHOPS FROM BACKEND
+  ========================= */
+
   const getShops = async () => {
+
     try {
 
       const response = await axios.get(
         "https://pradheepsiva.onrender.com/api/shop/all"
       );
 
-      setShops(response.data);
+      console.log(response.data);
+
+      // IMPORTANT FIX
+      setShops(response.data.data || []);
 
     } catch (error) {
+
       console.log(error);
+
+      setShops([]);
+
     }
   };
 
   useEffect(() => {
+
     getShops();
+
   }, []);
 
-  // HANDLE CHANGE
+  /* =========================
+     HANDLE CHANGE
+  ========================= */
+
   const handleChange = (e) => {
+
     setMobileData({
+
       ...mobileData,
-      [e.target.name]: e.target.value,
+
+      [e.target.name]:
+        e.target.value,
+
     });
   };
 
-  // HANDLE SUBMIT
+  /* =========================
+     HANDLE SUBMIT
+  ========================= */
+
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     try {
@@ -52,14 +80,22 @@ function MobileForm() {
         mobileData
       );
 
-      alert("Mobile Added Successfully");
+      alert(
+        "Mobile Added Successfully"
+      );
 
       setMobileData({
+
         shopName: "",
+
         mobileBrand: "",
+
         mobileModel: "",
+
         mobileIssue: "",
+
         entryDate: "",
+
       });
 
     } catch (error) {
@@ -67,36 +103,55 @@ function MobileForm() {
       console.log(error);
 
       alert("Submit Failed");
+
     }
   };
 
+  /* =========================
+     UI
+  ========================= */
+
   return (
+
     <section className="newentry">
 
-      <h2>Add New Mobile</h2>
+      <h2>
+        Add New Mobile
+      </h2>
 
       <form onSubmit={handleSubmit}>
 
-        {/* DYNAMIC SHOP DROPDOWN */}
+        {/* SHOP DROPDOWN */}
 
         <select
           name="shopName"
           value={mobileData.shopName}
-          onChange={handleChange} required
+          onChange={handleChange}
+          required
         >
 
-          <option value="" >
+          <option value="">
             Select Shop
           </option>
 
-          {shops.map((shop) => (
-            <option
-              key={shop._id}
-              value={shop.shopName}
-            >
-              {shop.shopName}
-            </option>
-          ))}
+          {
+
+            Array.isArray(shops) &&
+
+            shops.map((shop) => (
+
+              <option
+                key={shop._id}
+                value={shop.shopName}
+              >
+
+                {shop.shopName}
+
+              </option>
+
+            ))
+
+          }
 
         </select>
 
@@ -107,7 +162,8 @@ function MobileForm() {
           name="mobileBrand"
           placeholder="Mobile Brand"
           value={mobileData.mobileBrand}
-          onChange={handleChange}required
+          onChange={handleChange}
+          required
         />
 
         {/* MOBILE MODEL */}
@@ -117,7 +173,8 @@ function MobileForm() {
           name="mobileModel"
           placeholder="Mobile Model"
           value={mobileData.mobileModel}
-          onChange={handleChange} required
+          onChange={handleChange}
+          required
         />
 
         {/* MOBILE ISSUE */}
@@ -125,7 +182,8 @@ function MobileForm() {
         <select
           name="mobileIssue"
           value={mobileData.mobileIssue}
-          onChange={handleChange} required  
+          onChange={handleChange}
+          required
         >
 
           <option value="">
@@ -147,10 +205,12 @@ function MobileForm() {
           <option value="Network">
             Network
           </option>
-            <option value="software">
-            software
+
+          <option value="software">
+            Software
           </option>
-            <option value="mic">
+
+          <option value="mic">
             Mic
           </option>
 
@@ -162,16 +222,20 @@ function MobileForm() {
           type="date"
           name="entryDate"
           value={mobileData.entryDate}
-          onChange={handleChange} required
+          onChange={handleChange}
+          required
         />
 
         {/* SUBMIT BUTTON */}
 
         <button type="submit">
+
           Submit
+
         </button>
 
       </form>
+
     </section>
   );
 }
