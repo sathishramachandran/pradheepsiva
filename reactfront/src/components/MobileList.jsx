@@ -5,6 +5,8 @@ function MobileList() {
 
   const [mobiles, setMobiles] = useState([]);
 
+  console.log("Mobiles State:", mobiles);
+
   /* =========================
      GET ALL MOBILES
   ========================= */
@@ -160,6 +162,10 @@ function MobileList() {
 
                   {
 
+                    Array.isArray(
+                      groupedMobiles[shopName]
+                    ) &&
+
                     groupedMobiles[
                       shopName
                     ].map((mobile) => (
@@ -223,15 +229,19 @@ function MobileList() {
 
                         <p
                           style={{
+
                             color:
 
                               mobile.remainingDays === 3
+
                                 ? "green"
 
                                 : mobile.remainingDays === 2
+
                                 ? "lime"
 
                                 : mobile.remainingDays === 1
+
                                 ? "orange"
 
                                 : "red",
