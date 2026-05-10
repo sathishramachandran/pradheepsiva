@@ -130,7 +130,8 @@ function ShopForm() {
           onChange={handleChange}
         />
 
-        <textarea
+        <input
+        type="text"
           name="address"
           placeholder="Address"
           value={shopData.address}
