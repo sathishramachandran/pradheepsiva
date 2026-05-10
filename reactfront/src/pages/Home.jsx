@@ -14,7 +14,7 @@ function Home() {
     try {
 
       const response = await axios.get(
-        "http://localhost:5000/api/mobile/all"
+        "https://pradheepsiva.onrender.com/api/mobile/all"
       );
 
       const mobiles = response.data.data;

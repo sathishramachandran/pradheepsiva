@@ -12,7 +12,10 @@ function ShopForm() {
 
   const [loading, setLoading] = useState(false);
 
-  // HANDLE CHANGE
+  /* =========================
+     HANDLE CHANGE
+  ========================= */
+
   const handleChange = (e) => {
 
     setShopData({
@@ -22,26 +25,39 @@ function ShopForm() {
 
   };
 
-  // HANDLE SUBMIT
+  /* =========================
+     HANDLE SUBMIT
+  ========================= */
+
   const handleSubmit = async (e) => {
 
     e.preventDefault();
 
     // VALIDATION
+
     if (
       !shopData.shopName ||
       !shopData.ownerName ||
       !shopData.mobileNumber ||
       !shopData.address
     ) {
+
       alert("Please Fill All Fields");
+
       return;
+
     }
 
     // MOBILE NUMBER VALIDATION
+
     if (shopData.mobileNumber.length !== 10) {
-      alert("Mobile Number Must Be 10 Digits");
+
+      alert(
+        "Mobile Number Must Be 10 Digits"
+      );
+
       return;
+
     }
 
     try {
@@ -49,13 +65,16 @@ function ShopForm() {
       setLoading(true);
 
       await axios.post(
-        "http://localhost:5000/api/shop/add",
+        "https://pradheepsiva.onrender.com/api/shop/add",
         shopData
       );
 
-      alert("Shop Added Successfully");
+      alert(
+        "Shop Added Successfully"
+      );
 
       // CLEAR FORM
+
       setShopData({
         shopName: "",
         ownerName: "",
@@ -74,13 +93,16 @@ function ShopForm() {
       setLoading(false);
 
     }
+
   };
 
   return (
 
     <section className="newentry">
 
-      <h2>Enter New Shop</h2>
+      <h2>
+        Enter New Shop
+      </h2>
 
       <form onSubmit={handleSubmit}>
 
@@ -117,13 +139,18 @@ function ShopForm() {
 
         <button type="submit">
 
-          {loading ? "Submitting..." : "Submit"}
+          {
+            loading
+              ? "Submitting..."
+              : "Submit"
+          }
 
         </button>
 
       </form>
 
     </section>
+
   );
 }
 

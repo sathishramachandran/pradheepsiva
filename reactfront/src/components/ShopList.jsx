@@ -10,7 +10,7 @@ function ShopList() {
     try {
 
       const response = await axios.get(
-        "http://localhost:5000/api/shop/all"
+        "https://pradheepsiva.onrender.com/api/shop/all"
       );
 
       setShops(response.data);
@@ -26,7 +26,7 @@ function ShopList() {
     try {
 
       await axios.delete(
-        `http://localhost:5000/api/shop/delete/${id}`
+        `https://pradheepsiva.onrender.com/api/shop/delete/${id}`
       );
 
       // REMOVE FROM UI
@@ -112,7 +112,7 @@ const editShop = async (id) => {
   try {
 
     await axios.put(
-      `http://localhost:5000/api/shop/update/${id}`,
+      `https://pradheepsiva.onrender.com/api/shop/update/${id}`,
       {
         shopName,
         ownerName,

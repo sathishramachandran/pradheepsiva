@@ -19,7 +19,7 @@ function MobileForm() {
     try {
 
       const response = await axios.get(
-        "http://localhost:5000/api/shop/all"
+        "https://pradheepsiva.onrender.com/api/shop/all"
       );
 
       setShops(response.data);
@@ -48,7 +48,7 @@ function MobileForm() {
     try {
 
       await axios.post(
-        "http://localhost:5000/api/mobile/add",
+        "https://pradheepsiva.onrender.com/api/mobile/add",
         mobileData
       );
 

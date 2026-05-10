@@ -11,7 +11,7 @@ function MobileList() {
     try {
 
       const response = await axios.get(
-        "http://localhost:5000/api/mobile/all"
+        "https://pradheepsiva.onrender.com/api/mobile/all"
       );
 
       setMobiles(response.data.data);
@@ -35,7 +35,7 @@ function MobileList() {
     try {
 
       await axios.delete(
-        `http://localhost:5000/api/mobile/delete/${id}`
+        `https://pradheepsiva.onrender.com/api/mobile/delete/${id}`
       );
 
       alert("Mobile Deleted Successfully");
@@ -55,7 +55,7 @@ function MobileList() {
     try {
 
       await axios.put(
-        `http://localhost:5000/api/mobile/status/${id}`,
+        `https://pradheepsiva.onrender.com/api/mobile/status/${id}`,
         {
           status,
         }
