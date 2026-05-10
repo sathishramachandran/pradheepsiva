@@ -1,0 +1,13 @@
+body {
+  font-family: Arial;
+  background: #f5f5f5;
+}
+
+.title1 {
+  text-align: center;
+}
+
+.navbar1 {
+  display: flex;
+  gap: 20px;
+}
