@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function MobileForm() {
-
   const [mobileData, setMobileData] = useState({
     shopName: "",
     mobileBrand: "",
@@ -22,31 +21,24 @@ function MobileForm() {
   ========================= */
 
   const getShops = async () => {
-
     try {
-
       const response = await axios.get(
-        "https://pradheepsiva.onrender.com/api/shop/all"
+        "https://pradheepsiva.onrender.com/api/shop/all",
       );
 
       console.log(response.data);
 
       // IMPORTANT FIX
       setShops(response.data.data || []);
-
     } catch (error) {
-
       console.log(error);
 
       setShops([]);
-
     }
   };
 
   useEffect(() => {
-
     getShops();
-
   }, []);
 
   /* =========================
@@ -54,14 +46,10 @@ function MobileForm() {
   ========================= */
 
   const handleChange = (e) => {
-
     setMobileData({
-
       ...mobileData,
 
-      [e.target.name]:
-        e.target.value,
-
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -70,22 +58,17 @@ function MobileForm() {
   ========================= */
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     try {
-
       await axios.post(
         "https://pradheepsiva.onrender.com/api/mobile/add",
-        mobileData
+        mobileData,
       );
 
-      alert(
-        "Mobile Added Successfully"
-      );
+      alert("Mobile Added Successfully");
 
       setMobileData({
-
         shopName: "",
 
         mobileBrand: "",
@@ -95,15 +78,11 @@ function MobileForm() {
         mobileIssue: "",
 
         entryDate: "",
-
       });
-
     } catch (error) {
-
       console.log(error);
 
       alert("Submit Failed");
-
     }
   };
 
@@ -112,15 +91,10 @@ function MobileForm() {
   ========================= */
 
   return (
-
     <section className="newentry">
-
-      <h2>
-        Add New Mobile
-      </h2>
+      <h2>Add New Mobile</h2>
 
       <form onSubmit={handleSubmit}>
-
         {/* SHOP DROPDOWN */}
 
         <select
@@ -129,30 +103,14 @@ function MobileForm() {
           onChange={handleChange}
           required
         >
+          <option value="">Select Shop</option>
 
-          <option value="">
-            Select Shop
-          </option>
-
-          {
-
-            Array.isArray(shops) &&
-
+          {Array.isArray(shops) &&
             shops.map((shop) => (
-
-              <option
-                key={shop._id}
-                value={shop.shopName}
-              >
-
+              <option key={shop._id} value={shop.shopName}>
                 {shop.shopName}
-
               </option>
-
-            ))
-
-          }
-
+            ))}
         </select>
 
         {/* MOBILE BRAND */}
@@ -185,66 +143,39 @@ function MobileForm() {
           onChange={handleChange}
           required
         >
+          <option value="">Select Issue</option>
 
-          <option value="">
-            Select Issue
-          </option>
+          <option value="Dead">Dead</option>
 
-          <option value="Dead">
-            Dead
-          </option>
+          <option value="Charging">Charging</option>
 
-          <option value="Charging">
-            Charging
-          </option>
+          <option value="Display">Display</option>
 
-          <option value="Display">
-            Display
-          </option>
+          <option value="Network">Network</option>
 
-          <option value="Network">
-            Network
-          </option>
+          <option value="software">Software</option>
 
-          <option value="software">
-            Software
-          </option>
+          <option value="mic">Mic</option>
 
-          <option value="mic">
-            Mic
-          </option>
-          
-      
-        <option value="water lock">
-            water lock
-          </option>
-        <option value="other">
-          other
-        </option>
+          <option value="water lock">water lock</option>
+          <option value="other">other</option>
+        </select>
 
-      </select>
+        {/* ENTRY DATE */}
 
-      {/* ENTRY DATE */}
+        <input
+          type="date"
+          name="entryDate"
+          value={mobileData.entryDate}
+          onChange={handleChange}
+          required
+        />
 
-      <input
-        type="date"
-        name="entryDate"
-        value={mobileData.entryDate}
-        onChange={handleChange}
-        required
-      />
+        {/* SUBMIT BUTTON */}
 
-      {/* SUBMIT BUTTON */}
-
-      <button type="submit">
-
-        Submit
-
-      </button>
-
-    </form>
-
-    </section >
+        <button type="submit">Submit</button>
+      </form>
+    </section>
   );
 }
 
