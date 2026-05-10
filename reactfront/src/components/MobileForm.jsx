@@ -213,6 +213,13 @@ function MobileForm() {
           <option value="mic">
             Mic
           </option>
+            <option value="water lock">
+            water lock
+          </option>
+          </option>
+            <option value="other">
+            other
+          </option>
 
         </select>
 
