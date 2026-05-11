@@ -29,25 +29,26 @@ function App() {
           path="/"
           element={<Home />}
         />
-
-        <Route
-          path="/shop"
-          element={<ShopForm />}
+  <Route
+          path="/mobilelist"
+          element={<MobileList />}
         />
 
 <Route
   path="/shoplist"
   element={<ShopList />}
 />
+
+        <Route
+          path="/shop"
+          element={<ShopForm />}
+        />
         <Route
           path="/mobile"
           element={<MobileForm />}
         />
 
-        <Route
-          path="/mobilelist"
-          element={<MobileList />}
-        />
+      
 
       </Routes>
 
