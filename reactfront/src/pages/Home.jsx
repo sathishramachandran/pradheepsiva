@@ -113,6 +113,8 @@ function Home() {
 
       }
 
+      {/* DASHBOARD */}
+
       <div className="dashboard-grid">
 
         <div className="dashboard-card">
@@ -153,45 +155,50 @@ function Home() {
 
       </div>
 
+      {/* FOOTER */}
+
+      <div className="developer-footer">
+
+        <h3>
+          Developed By Sathish
+        </h3>
+
+        <p>
+          📞 9488909434
+        </p>
+
+        <p className="contact-dev">
+
+          🌐 Need Website or
+          Mobile Shop Software?
+
+          Contact Me :
+          9488909434
+
+        </p>
+
+        <h4 className="business-quote">
+
+          "Smart Repair Management
+          For Smart Mobile Business"
+
+        </h4>
+
+        <p className="business-text">
+
+          Helping Mobile Shops
+          Manage Repairs,
+          Delivery, Customers &
+          Service Status
+          Professionally.
+
+        </p>
+
+      </div>
+
     </div>
 
   );
 }
-<div className="developer-footer">
 
-  <h3>
-    Developed By Sathish
-  </h3>
-
-  <p>
-    📞 9488909434
-  </p>
-
-  <p className="contact-dev">
-
-    🌐 Need Website or
-    Mobile Shop Software?
-
-    Contact Me :
-    9488909434
-
-  </p>
-
-  <h4 className="business-quote">
-
-    "Smart Repair Management
-    For Smart Mobile Business"
-
-  </h4>
-
-  <p className="business-text">
-
-    Helping Mobile Shops
-    Manage Repairs, Delivery,
-    Customers & Service Status
-    Professionally.
-
-  </p>
-
-</div>
 export default Home;
