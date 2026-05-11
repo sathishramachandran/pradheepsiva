@@ -12,13 +12,13 @@ function Navbar() {
         Show Shop List
       </Link>
 
-      <Link to="/shop">
-        Enter New Shop
-      </Link>
-
-      <Link to="/mobilelist">
+       <Link to="/mobilelist">
         Show Mobiles List
       </Link>
+
+      <Link to="/shop">
+        Enter New Shop
+      </Link>     
 
       <Link to="/mobile">
         Enter New Mobile
