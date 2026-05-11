@@ -308,7 +308,7 @@ button:hover{
    MOBILE CARD
 ========================= */
 
-.mobile-card{
+/* .mobile-card{
 
   background:
     rgba(255,255,255,0.05);
@@ -346,8 +346,82 @@ button:hover{
   color: #e2e8f0;
 
   font-size: 15px;
+} */
+.mobile-card{
+
+  background:
+    rgba(255,255,255,0.05);
+
+  backdrop-filter: blur(12px);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  border-radius: 16px;
+
+  padding: 15px;
+
+  margin-bottom: 20px;
+
+  transition: 0.3s;
+
+  box-shadow:
+    0 5px 20px rgba(0,0,0,0.3);
+
+  width: 320px;
+
+  min-height: 220px;
 }
 
+/* HOVER */
+
+.mobile-card:hover{
+
+  transform:
+    translateY(-5px);
+
+  box-shadow:
+    0 8px 25px rgba(6,182,212,0.3);
+}
+
+/* TEXT */
+
+.mobile-card p{
+
+  margin: 8px 0;
+
+  color: #e2e8f0;
+
+  font-size: 14px;
+}
+
+/* 2 COLUMN LAYOUT */
+
+.shop-section{
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 20px;
+}
+
+/* MOBILE RESPONSIVE */
+
+@media(max-width:768px){
+
+  .shop-section{
+
+    grid-template-columns:
+      1fr;
+  }
+
+  .mobile-card{
+
+    width: 100%;
+  }
+}
 /* =========================
    BUTTON GROUP
 ========================= */
