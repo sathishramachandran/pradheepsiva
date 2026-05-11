@@ -426,6 +426,182 @@ app.delete(
   }
 );
 
+
+
+/* =========================
+   USER SCHEMA
+========================= */
+
+const UserSchema = new mongoose.Schema(
+  {
+
+    shopName: {
+      type: String,
+      required: true,
+    },
+
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+
+    password: {
+      type: String,
+      required: true,
+    },
+
+    role: {
+      type: String,
+      default: "shop",
+    },
+
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const User = mongoose.model(
+  "User",
+  UserSchema
+);
+/* =========================
+   CREATE SHOP USER
+========================= */
+
+app.post(
+  "/api/user/create",
+  async (req, res) => {
+
+    try {
+
+      const user =
+        await User.create(
+          req.body
+        );
+
+      res.status(201).json({
+
+        success: true,
+
+        message:
+          "User Created Successfully",
+
+        data: user,
+
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+
+        success: false,
+
+        message: error.message,
+
+      });
+
+    }
+
+  }
+);
+/* =========================
+   SHOP LOGIN
+========================= */
+
+app.post(
+  "/api/user/login",
+  async (req, res) => {
+
+    try {
+
+      const user =
+        await User.findOne({
+
+          username:
+            req.body.username,
+
+          password:
+            req.body.password,
+
+        });
+
+      if (!user) {
+
+        return res.status(401).json({
+
+          success: false,
+
+          message:
+            "Invalid Username or Password",
+
+        });
+
+      }
+
+      res.status(200).json({
+
+        success: true,
+
+        data: user,
+
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+
+        success: false,
+
+        message: error.message,
+
+      });
+
+    }
+
+  }
+);
+/* =========================
+   GET SHOP MOBILES
+========================= */
+
+app.get(
+  "/api/mobile/shop/:shopName",
+  async (req, res) => {
+
+    try {
+
+      const mobiles =
+        await Mobile.find({
+
+          shopName:
+            req.params.shopName,
+
+        });
+
+      res.status(200).json({
+
+        success: true,
+
+        data: mobiles,
+
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+
+        success: false,
+
+        message: error.message,
+
+      });
+
+    }
+
+  }
+);
 /* =========================
    SERVER
 ========================= */
