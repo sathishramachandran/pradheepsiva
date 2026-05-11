@@ -1,77 +1,160 @@
 import { useEffect, useState } from "react";
+
 import axios from "axios";
 
 function Home() {
 
-  const [totalMobiles, setTotalMobiles] = useState(0);
+  const [mobiles, setMobiles] =
+    useState([]);
 
-  const [pendingRepairs, setPendingRepairs] = useState(0);
+  const shopName =
+    localStorage.getItem(
+      "shopName"
+    );
 
-  const [completedRepairs, setCompletedRepairs] = useState(0);
+  /* =========================
+     GET MOBILES
+  ========================= */
 
-  // GET MOBILE DATA
-  const getDashboardData = async () => {
+  const getMobiles = async () => {
+
     try {
 
-      const response = await axios.get(
-        "https://pradheepsiva.onrender.com/api/mobile/all"
+      let response;
+
+      // SHOP LOGIN
+
+      if (shopName) {
+
+        response =
+          await axios.get(
+            `https://pradheepsiva.onrender.com/api/mobile/shop/${shopName}`
+          );
+
+      }
+
+      // ADMIN
+
+      else {
+
+        response =
+          await axios.get(
+            "https://pradheepsiva.onrender.com/api/mobile/all"
+          );
+
+      }
+
+      setMobiles(
+        response.data.data || []
       );
-
-      const mobiles = response.data.data;
-
-      // TOTAL MOBILES
-      setTotalMobiles(mobiles.length);
-
-      // PENDING COUNT
-      const pending = mobiles.filter(
-        (item) => item.status === "Pending"
-      );
-
-      setPendingRepairs(pending.length);
-
-      // COMPLETED COUNT
-      const completed = mobiles.filter(
-        (item) => item.status === "Completed"
-      );
-
-      setCompletedRepairs(completed.length);
 
     } catch (error) {
+
       console.log(error);
+
     }
+
   };
 
   useEffect(() => {
-    getDashboardData();
+
+    getMobiles();
+
   }, []);
 
+  /* =========================
+     COUNT
+  ========================= */
+
+  const totalMobiles =
+    mobiles.length;
+
+  const pendingMobiles =
+    mobiles.filter(
+
+      (item) =>
+        item.status !==
+        "Completed"
+
+    ).length;
+
+  const completedMobiles =
+    mobiles.filter(
+
+      (item) =>
+        item.status ===
+        "Completed"
+
+    ).length;
+
+  /* =========================
+     UI
+  ========================= */
+
   return (
-    <div className="home-container">
 
-      <h2>Welcome to Pradheepsiva Mobiles</h2>
+    <div className="home-page">
 
-      <div className="home-cards">
+      <h1>
+        Welcome to
+        Pradheepsiva Mobiles
+      </h1>
 
-        <div className="card">
-          <h3>Total Mobiles</h3>
+      {
 
-          <p>{totalMobiles}</p>
+        shopName && (
+
+          <h2>
+            Shop :
+            {shopName}
+          </h2>
+
+        )
+
+      }
+
+      <div className="dashboard-grid">
+
+        <div className="dashboard-card">
+
+          <h2>
+            Total Mobiles
+          </h2>
+
+          <h1>
+            {totalMobiles}
+          </h1>
+
         </div>
 
-        <div className="card">
-          <h3>Pending Repairs</h3>
+        <div className="dashboard-card">
 
-          <p>{pendingRepairs}</p>
+          <h2>
+            Pending Repairs
+          </h2>
+
+          <h1>
+            {pendingMobiles}
+          </h1>
+
         </div>
 
-        <div className="card">
-          <h3>Completed Repairs</h3>
+        <div className="dashboard-card">
 
-          <p>{completedRepairs}</p>
+          <h2>
+            Completed Repairs
+          </h2>
+
+          <h1>
+            {completedMobiles}
+          </h1>
+
         </div>
 
       </div>
+
     </div>
+
   );
 }
 

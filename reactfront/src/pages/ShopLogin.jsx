@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import axios from "axios";
 
 function ShopLogin() {
@@ -57,7 +58,7 @@ function ShopLogin() {
 
   return (
 
-    <div className="newentry">
+    <section className="newentry">
 
       <h2>
         Shop Login
@@ -85,7 +86,7 @@ function ShopLogin() {
 
       </form>
 
-    </div>
+    </section>
 
   );
 }

@@ -1,64 +1,41 @@
 import { useState } from "react";
+
 import axios from "axios";
 
 function ShopForm() {
 
-  const [shopData, setShopData] = useState({
-    shopName: "",
-    ownerName: "",
-    mobileNumber: "",
-    address: "",
-  });
+  const [loading, setLoading] =
+    useState(false);
 
-  const [loading, setLoading] = useState(false);
+  const [shopData, setShopData] =
+    useState({
 
-  /* =========================
-     HANDLE CHANGE
-  ========================= */
+      shopName: "",
+
+      ownerName: "",
+
+      mobileNumber: "",
+
+      address: "",
+
+    });
 
   const handleChange = (e) => {
 
     setShopData({
+
       ...shopData,
-      [e.target.name]: e.target.value,
+
+      [e.target.name]:
+        e.target.value,
+
     });
 
   };
 
-  /* =========================
-     HANDLE SUBMIT
-  ========================= */
-
   const handleSubmit = async (e) => {
 
     e.preventDefault();
-
-    // VALIDATION
-
-    if (
-      !shopData.shopName ||
-      !shopData.ownerName ||
-      !shopData.mobileNumber ||
-      !shopData.address
-    ) {
-
-      alert("Please Fill All Fields");
-
-      return;
-
-    }
-
-    // MOBILE NUMBER VALIDATION
-
-    if (shopData.mobileNumber.length !== 10) {
-
-      alert(
-        "Mobile Number Must Be 10 Digits"
-      );
-
-      return;
-
-    }
 
     try {
 
@@ -73,20 +50,12 @@ function ShopForm() {
         "Shop Added Successfully"
       );
 
-      // CLEAR FORM
-
-      setShopData({
-        shopName: "",
-        ownerName: "",
-        mobileNumber: "",
-        address: "",
-      });
+      window.location.href =
+        "/mobile";
 
     } catch (error) {
 
       console.log(error);
-
-      alert("Submit Failed");
 
     } finally {
 
@@ -101,7 +70,7 @@ function ShopForm() {
     <section className="newentry">
 
       <h2>
-        Enter New Shop
+        Add Shop
       </h2>
 
       <form onSubmit={handleSubmit}>
@@ -110,7 +79,6 @@ function ShopForm() {
           type="text"
           name="shopName"
           placeholder="Shop Name"
-          value={shopData.shopName}
           onChange={handleChange}
         />
 
@@ -118,7 +86,6 @@ function ShopForm() {
           type="text"
           name="ownerName"
           placeholder="Owner Name"
-          value={shopData.ownerName}
           onChange={handleChange}
         />
 
@@ -126,24 +93,25 @@ function ShopForm() {
           type="number"
           name="mobileNumber"
           placeholder="Mobile Number"
-          value={shopData.mobileNumber}
           onChange={handleChange}
         />
 
-        <input
-        type="text"
+        <textarea
           name="address"
           placeholder="Address"
-          value={shopData.address}
           onChange={handleChange}
         />
 
         <button type="submit">
 
           {
+
             loading
+
               ? "Submitting..."
-              : "Submit"
+
+              : "Add Shop"
+
           }
 
         </button>

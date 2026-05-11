@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import axios from "axios";
 
 function AdminCreateUser() {
@@ -39,7 +40,7 @@ function AdminCreateUser() {
       );
 
       alert(
-        "Shop User Created"
+        "User Created Successfully"
       );
 
     } catch (error) {
@@ -52,7 +53,7 @@ function AdminCreateUser() {
 
   return (
 
-    <div className="newentry">
+    <section className="newentry">
 
       <h2>
         Create Shop User
@@ -87,7 +88,7 @@ function AdminCreateUser() {
 
       </form>
 
-    </div>
+    </section>
 
   );
 }

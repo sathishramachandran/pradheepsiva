@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import axios from "axios";
 
 function ShopMobiles() {
@@ -21,7 +22,7 @@ function ShopMobiles() {
         );
 
       setMobiles(
-        response.data.data
+        response.data.data || []
       );
 
     } catch (error) {
@@ -46,48 +47,52 @@ function ShopMobiles() {
         Shop Mobiles
       </h1>
 
-      {
+      <div className="shop-section">
 
-        mobiles.map((mobile) => (
+        {
 
-          <div
-            className="mobile-card"
-            key={mobile._id}
-          >
+          mobiles.map((mobile) => (
 
-            <p>
-              Brand :
-              {
-                mobile.mobileBrand
-              }
-            </p>
+            <div
+              className="mobile-card"
+              key={mobile._id}
+            >
 
-            <p>
-              Model :
-              {
-                mobile.mobileModel
-              }
-            </p>
+              <p>
+                Brand :
+                {
+                  mobile.mobileBrand
+                }
+              </p>
 
-            <p>
-              Issue :
-              {
-                mobile.mobileIssue
-              }
-            </p>
+              <p>
+                Model :
+                {
+                  mobile.mobileModel
+                }
+              </p>
 
-            <p>
-              Status :
-              {
-                mobile.status
-              }
-            </p>
+              <p>
+                Issue :
+                {
+                  mobile.mobileIssue
+                }
+              </p>
 
-          </div>
+              <p>
+                Status :
+                {
+                  mobile.status
+                }
+              </p>
 
-        ))
+            </div>
 
-      }
+          ))
+
+        }
+
+      </div>
 
     </div>
 

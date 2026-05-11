@@ -12,7 +12,6 @@ import ShopList from "./components/ShopList";
 
 import MobileList from "./components/MobileList";
 
-// NEW PAGES
 import AdminCreateUser from "./pages/AdminCreateUser";
 
 import ShopLogin from "./pages/ShopLogin";
@@ -33,56 +32,40 @@ function App() {
 
       <Routes>
 
-        {/* HOME */}
-
         <Route
           path="/"
           element={<Home />}
         />
-
-        {/* MOBILE LIST */}
-
-        <Route
-          path="/mobilelist"
-          element={<MobileList />}
-        />
-
-        {/* SHOP LIST */}
-
-        <Route
-          path="/shoplist"
-          element={<ShopList />}
-        />
-
-        {/* ADD SHOP */}
 
         <Route
           path="/shop"
           element={<ShopForm />}
         />
 
-        {/* ADD MOBILE */}
-
         <Route
           path="/mobile"
           element={<MobileForm />}
         />
 
-        {/* ADMIN CREATE USER */}
+        <Route
+          path="/shoplist"
+          element={<ShopList />}
+        />
+
+        <Route
+          path="/mobilelist"
+          element={<MobileList />}
+        />
 
         <Route
           path="/admin"
           element={<AdminCreateUser />}
         />
 
-        {/* SHOP LOGIN */}
-
         <Route
           path="/shoplogin"
           element={<ShopLogin />}
         />
-
-        {/* SHOP MOBILES */}
 
         <Route
           path="/shopmobiles"
