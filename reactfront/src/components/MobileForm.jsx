@@ -208,25 +208,33 @@ function MobileForm() {
 
         <div className="partsBox">
           <h3>Select Mobile Parts</h3>
-
           <label>
             <input
               type="checkbox"
-              value="Mic"
-              checked={mobileData.mobileParts.includes("Mic")}
+              value="camera"
+              checked={mobileData.mobileParts.includes("camera")}
               onChange={handlePartsChange}
             />
-            Mic
+            camera
           </label>
 
           <label>
             <input
               type="checkbox"
-              value="Display"
-              checked={mobileData.mobileParts.includes("Display")}
+              value="sim tray"
+              checked={mobileData.mobileParts.includes("sim tray")}
               onChange={handlePartsChange}
             />
-            Display
+            sim tray
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              value="button"
+              checked={mobileData.mobileParts.includes("button")}
+              onChange={handlePartsChange}
+            />
+            button
           </label>
 
           <label>
@@ -247,6 +255,24 @@ function MobileForm() {
               onChange={handlePartsChange}
             />
             Back Door
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              value="ringer speaker"
+              checked={mobileData.mobileParts.includes("ringer speaker")}
+              onChange={handlePartsChange}
+            />
+            ringer speaker
+          </label>
+           <label>
+            <input
+              type="checkbox"
+              value="center strip"
+              checked={mobileData.mobileParts.includes("center strip")}
+              onChange={handlePartsChange}
+            />
+            center strip
           </label>
         </div>
 
