@@ -5,8 +5,6 @@ function MobileList() {
 
   const [mobiles, setMobiles] = useState([]);
 
-  console.log("Mobiles State:", mobiles);
-
   /* =========================
      GET ALL MOBILES
   ========================= */
@@ -19,9 +17,6 @@ function MobileList() {
         "https://pradheepsiva.onrender.com/api/mobile/all"
       );
 
-      console.log(response.data);
-
-      // SAFE ARRAY FIX
       setMobiles(response.data.data || []);
 
     } catch (error) {
@@ -40,6 +35,44 @@ function MobileList() {
   }, []);
 
   /* =========================
+     ALERT NOTIFICATION
+  ========================= */
+
+  useEffect(() => {
+
+    mobiles.forEach((mobile) => {
+
+      // SKIP COMPLETED
+      if (mobile.status === "Completed") return;
+
+      const today = new Date();
+
+      const entryDate = new Date(
+        mobile.entryDate
+      );
+
+      const diffTime =
+        today - entryDate;
+
+      const diffDays = Math.floor(
+        diffTime /
+          (1000 * 60 * 60 * 24)
+      );
+
+      // ALERT AFTER 3 DAYS
+      if (diffDays >= 3) {
+
+        alert(
+          `${mobile.mobileModel} repair pending for ${diffDays} days`
+        );
+
+      }
+
+    });
+
+  }, [mobiles]);
+
+  /* =========================
      DELETE MOBILE
   ========================= */
 
@@ -51,7 +84,9 @@ function MobileList() {
         `https://pradheepsiva.onrender.com/api/mobile/delete/${id}`
       );
 
-      alert("Mobile Deleted Successfully");
+      alert(
+        "Mobile Deleted Successfully"
+      );
 
       getMobiles();
 
@@ -80,6 +115,10 @@ function MobileList() {
         }
       );
 
+      alert(
+        `Status Updated To ${status}`
+      );
+
       getMobiles();
 
     } catch (error) {
@@ -93,29 +132,36 @@ function MobileList() {
      GROUP BY SHOP NAME
   ========================= */
 
-  const groupedMobiles = Array.isArray(mobiles)
+  const groupedMobiles =
+    Array.isArray(mobiles)
 
-    ? mobiles.reduce(
+      ? mobiles.reduce(
+          (groups, mobile) => {
 
-        (groups, mobile) => {
+            if (
+              !groups[
+                mobile.shopName
+              ]
+            ) {
 
-          if (!groups[mobile.shopName]) {
+              groups[
+                mobile.shopName
+              ] = [];
 
-            groups[mobile.shopName] = [];
+            }
 
-          }
+            groups[
+              mobile.shopName
+            ].push(mobile);
 
-          groups[mobile.shopName].push(mobile);
+            return groups;
 
-          return groups;
+          },
 
-        },
+          {}
+        )
 
-        {}
-
-      )
-
-    : {};
+      : {};
 
   /* =========================
      UI
@@ -131,7 +177,8 @@ function MobileList() {
 
       {
 
-        Object.keys(groupedMobiles).length === 0
+        Object.keys(groupedMobiles)
+          .length === 0
 
           ? (
 
@@ -143,32 +190,51 @@ function MobileList() {
 
           : (
 
-            Object.keys(groupedMobiles).map(
+            Object.keys(
+              groupedMobiles
+            ).map((shopName) => (
 
-              (shopName) => (
+              <div
+                key={shopName}
+                className="shop-section"
+              >
 
-                <div
-                  key={shopName}
-                  className="shop-section"
-                >
+                {/* SHOP TITLE */}
 
-                  {/* SHOP TITLE */}
+                <h2 className="shop-title">
+                  {shopName}
+                </h2>
 
-                  <h2 className="shop-title">
-                    {shopName}
-                  </h2>
+                {/* MOBILE LIST */}
 
-                  {/* MOBILE LIST */}
+                {
 
-                  {
+                  groupedMobiles[
+                    shopName
+                  ].map((mobile) => {
 
-                    Array.isArray(
-                      groupedMobiles[shopName]
-                    ) &&
+                    // DAYS CALCULATION
+                    const today =
+                      new Date();
 
-                    groupedMobiles[
-                      shopName
-                    ].map((mobile) => (
+                    const entryDate =
+                      new Date(
+                        mobile.entryDate
+                      );
+
+                    const diffTime =
+                      today - entryDate;
+
+                    const diffDays =
+                      Math.floor(
+                        diffTime /
+                          (1000 *
+                            60 *
+                            60 *
+                            24)
+                      );
+
+                    return (
 
                       <div
                         className="mobile-card"
@@ -178,101 +244,92 @@ function MobileList() {
                         <p>
                           <strong>
                             Brand :
-                          </strong>
-
-                          {" "}
-
-                          {mobile.mobileBrand}
+                          </strong>{" "}
+                          {
+                            mobile.mobileBrand
+                          }
                         </p>
 
                         <p>
                           <strong>
                             Model :
-                          </strong>
-
-                          {" "}
-
-                          {mobile.mobileModel}
+                          </strong>{" "}
+                          {
+                            mobile.mobileModel
+                          }
                         </p>
 
                         <p>
                           <strong>
                             Issue :
-                          </strong>
+                          </strong>{" "}
+                          {
+                            mobile.mobileIssue
+                          }
+                        </p>
 
-                          {" "}
+                        <p>
+                          <strong>
+                            Parts :
+                          </strong>{" "}
+                          {
 
-                          {mobile.mobileIssue}
+                            Array.isArray(
+                              mobile.mobileParts
+                            )
+
+                              ? mobile.mobileParts.join(
+                                  ", "
+                                )
+
+                              : ""
+
+                          }
                         </p>
 
                         <p>
                           <strong>
                             Entry Date :
-                          </strong>
-
-                          {" "}
-
-                          {mobile.entryDate}
+                          </strong>{" "}
+                          {
+                            mobile.entryDate
+                          }
                         </p>
 
                         <p>
                           <strong>
                             Status :
-                          </strong>
-
-                          {" "}
-
-                          {mobile.status}
-                        </p>
-
-                        {/* REMAINING DAYS */}
-
-                        <p
-                          style={{
-
-                            color:
-
-                              mobile.remainingDays === 3
-
-                                ? "green"
-
-                                : mobile.remainingDays === 2
-
-                                ? "lime"
-
-                                : mobile.remainingDays === 1
-
-                                ? "orange"
-
-                                : "red",
-
-                            fontWeight:
-                              "bold",
-
-                            fontSize:
-                              "18px",
-                          }}
-                        >
-
+                          </strong>{" "}
                           {
-
-                            mobile.remainingDays === 3
-
-                              ? "🟢 3 Days Remaining"
-
-                              : mobile.remainingDays === 2
-
-                              ? "🟡 2 Days Remaining"
-
-                              : mobile.remainingDays === 1
-
-                              ? "🟠 1 Day Remaining"
-
-                              : "🔴 Delivery Date Over"
-
+                            mobile.status
                           }
-
                         </p>
+
+                        {/* ALERT MESSAGE */}
+
+                        {
+
+                          mobile.status !==
+                            "Completed" &&
+
+                          diffDays >= 3 && (
+
+                            <p
+                              style={{
+                                color: "red",
+                                fontWeight:
+                                  "bold",
+                                fontSize:
+                                  "18px",
+                              }}
+                            >
+                              🔴 Repair Pending More
+                              Than 3 Days
+                            </p>
+
+                          )
+
+                        }
 
                         {/* BUTTONS */}
 
@@ -315,7 +372,7 @@ function MobileList() {
                           </button>
 
                           <button
-                            className="complete-btn"
+                            className="delivery-btn"
                             onClick={() =>
                               updateStatus(
                                 mobile._id,
@@ -341,15 +398,15 @@ function MobileList() {
 
                       </div>
 
-                    ))
+                    );
 
-                  }
+                  })
 
-                </div>
+                }
 
-              )
+              </div>
 
-            )
+            ))
 
           )
 

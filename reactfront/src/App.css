@@ -437,3 +437,21 @@ button:hover{
     align-items: center;
   }
 }
+.partsBox{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:15px;
+  margin-bottom:15px;
+}
+
+.partsBox h3{
+  margin:0;
+}
+
+.partsBox label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:16px;
+}

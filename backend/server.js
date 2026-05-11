@@ -35,6 +35,13 @@ const MobileSchema = new mongoose.Schema(
 
     mobileIssue: String,
 
+    // MOBILE PARTS
+    mobileParts: [
+      {
+        type: String,
+      },
+    ],
+
     entryDate: String,
 
     status: {

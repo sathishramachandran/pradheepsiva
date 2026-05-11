@@ -7,28 +7,29 @@ function MobileForm() {
     mobileBrand: "",
     mobileModel: "",
     mobileIssue: "",
+    mobileParts: [],
     entryDate: "",
   });
 
+  // OTHER ISSUE STATE
+  const [otherIssue, setOtherIssue] = useState("");
+
   /* =========================
-     DYNAMIC SHOPS
+     SHOPS
   ========================= */
 
   const [shops, setShops] = useState([]);
 
   /* =========================
-     GET SHOPS FROM BACKEND
+     GET SHOPS
   ========================= */
 
   const getShops = async () => {
     try {
       const response = await axios.get(
-        "https://pradheepsiva.onrender.com/api/shop/all",
+        "https://pradheepsiva.onrender.com/api/shop/all"
       );
 
-      console.log(response.data);
-
-      // IMPORTANT FIX
       setShops(response.data.data || []);
     } catch (error) {
       console.log(error);
@@ -42,15 +43,36 @@ function MobileForm() {
   }, []);
 
   /* =========================
-     HANDLE CHANGE
+     HANDLE INPUT CHANGE
   ========================= */
 
   const handleChange = (e) => {
     setMobileData({
       ...mobileData,
-
       [e.target.name]: e.target.value,
     });
+  };
+
+  /* =========================
+     HANDLE PARTS CHECKBOX
+  ========================= */
+
+  const handlePartsChange = (e) => {
+    const value = e.target.value;
+
+    if (e.target.checked) {
+      setMobileData({
+        ...mobileData,
+        mobileParts: [...mobileData.mobileParts, value],
+      });
+    } else {
+      setMobileData({
+        ...mobileData,
+        mobileParts: mobileData.mobileParts.filter(
+          (item) => item !== value
+        ),
+      });
+    }
   };
 
   /* =========================
@@ -60,25 +82,33 @@ function MobileForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const finalData = {
+      ...mobileData,
+
+      mobileIssue:
+        mobileData.mobileIssue === "Other"
+          ? otherIssue
+          : mobileData.mobileIssue,
+    };
+
     try {
       await axios.post(
         "https://pradheepsiva.onrender.com/api/mobile/add",
-        mobileData,
+        finalData
       );
 
       alert("Mobile Added Successfully");
 
       setMobileData({
         shopName: "",
-
         mobileBrand: "",
-
         mobileModel: "",
-
         mobileIssue: "",
-
+        mobileParts: [],
         entryDate: "",
       });
+
+      setOtherIssue("");
     } catch (error) {
       console.log(error);
 
@@ -153,13 +183,72 @@ function MobileForm() {
 
           <option value="Network">Network</option>
 
-          <option value="software">Software</option>
+          <option value="Software">Software</option>
 
-          <option value="mic">Mic</option>
+          <option value="Mic">Mic</option>
 
-          <option value="water lock">water lock</option>
-          <option value="other">other</option>
+          <option value="Water Lock">Water Lock</option>
+
+          <option value="Other">Other</option>
         </select>
+
+        {/* OTHER ISSUE */}
+
+        {mobileData.mobileIssue === "Other" && (
+          <input
+            type="text"
+            placeholder="Enter Other Issue"
+            value={otherIssue}
+            onChange={(e) => setOtherIssue(e.target.value)}
+            required
+          />
+        )}
+
+        {/* MOBILE PARTS */}
+
+        <div className="partsBox">
+          <h3>Select Mobile Parts</h3>
+
+          <label>
+            <input
+              type="checkbox"
+              value="Mic"
+              checked={mobileData.mobileParts.includes("Mic")}
+              onChange={handlePartsChange}
+            />
+            Mic
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              value="Display"
+              checked={mobileData.mobileParts.includes("Display")}
+              onChange={handlePartsChange}
+            />
+            Display
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              value="Battery"
+              checked={mobileData.mobileParts.includes("Battery")}
+              onChange={handlePartsChange}
+            />
+            Battery
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              value="Back Door"
+              checked={mobileData.mobileParts.includes("Back Door")}
+              onChange={handlePartsChange}
+            />
+            Back Door
+          </label>
+        </div>
 
         {/* ENTRY DATE */}
 
