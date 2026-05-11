@@ -513,12 +513,15 @@ button:hover{
 }
 .partsBox{
   display:flex;
-  flex-direction:column;
+  /* flex-direction:column; */
   gap:10px;
   margin-top:15px;
   margin-bottom:15px;
 }
 
+.partsBox1{
+  margin-top:19px;
+}
 .partsBox h3{
   margin:0;
 }
