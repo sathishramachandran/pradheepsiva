@@ -205,75 +205,80 @@ function MobileForm() {
         )}
 
         {/* MOBILE PARTS */}
-
         <div className="partsBox">
-          <h3>Select Mobile Parts</h3>
-          <label>
-            <input
-              type="checkbox"
-              value="camera"
-              checked={mobileData.mobileParts.includes("camera")}
-              onChange={handlePartsChange}
-            />
-            camera
-          </label>
+          <div className="partsBox1">
+            <h3>Select Mobile Parts</h3>
+            <label>
+              <input
+                type="checkbox"
+                value="camera"
+                checked={mobileData.mobileParts.includes("camera")}
+                onChange={handlePartsChange}
+              />
+              camera
+            </label>
 
-          <label>
-            <input
-              type="checkbox"
-              value="sim tray"
-              checked={mobileData.mobileParts.includes("sim tray")}
-              onChange={handlePartsChange}
-            />
-            sim tray
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              value="button"
-              checked={mobileData.mobileParts.includes("button")}
-              onChange={handlePartsChange}
-            />
-            button
-          </label>
+            <label>
+              <input
+                type="checkbox"
+                value="sim tray"
+                checked={mobileData.mobileParts.includes("sim tray")}
+                onChange={handlePartsChange}
+              />
+              sim tray
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="button"
+                checked={mobileData.mobileParts.includes("button")}
+                onChange={handlePartsChange}
+              />
+              button
+            </label>
+            </div>
+<div className="partsBox1">
 
-          <label>
-            <input
-              type="checkbox"
-              value="Battery"
-              checked={mobileData.mobileParts.includes("Battery")}
-              onChange={handlePartsChange}
-            />
-            Battery
-          </label>
 
-          <label>
-            <input
-              type="checkbox"
-              value="Back Door"
-              checked={mobileData.mobileParts.includes("Back Door")}
-              onChange={handlePartsChange}
-            />
-            Back Door
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              value="ringer speaker"
-              checked={mobileData.mobileParts.includes("ringer speaker")}
-              onChange={handlePartsChange}
-            />
-            ringer speaker
-          </label>
-           <label>
-            <input
-              type="checkbox"
-              value="center strip"
-              checked={mobileData.mobileParts.includes("center strip")}
-              onChange={handlePartsChange}
-            />
-            center strip
-          </label>
+            <label>
+              <input
+                type="checkbox"
+                value="Battery"
+                checked={mobileData.mobileParts.includes("Battery")}
+                onChange={handlePartsChange}
+                />
+              Battery
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                value="Back Door"
+                checked={mobileData.mobileParts.includes("Back Door")}
+                onChange={handlePartsChange}
+                />
+              Back Door
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="ringer speaker"
+                checked={mobileData.mobileParts.includes("ringer speaker")}
+                onChange={handlePartsChange}
+              />
+              ringer speaker
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="center strip"
+                checked={mobileData.mobileParts.includes("center strip")}
+                onChange={handlePartsChange}
+                />
+              center strip
+            </label>
+                
+          </div>
         </div>
 
         {/* ENTRY DATE */}
