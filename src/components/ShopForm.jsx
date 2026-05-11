@@ -1,11 +1,13 @@
 import { useState } from "react";
-
 import axios from "axios";
 
 function ShopForm() {
 
   const [loading, setLoading] =
     useState(false);
+
+  const [message, setMessage] =
+    useState("");
 
   const [shopData, setShopData] =
     useState({
@@ -20,6 +22,10 @@ function ShopForm() {
 
     });
 
+  /* =========================
+     HANDLE CHANGE
+  ========================= */
+
   const handleChange = (e) => {
 
     setShopData({
@@ -33,13 +39,21 @@ function ShopForm() {
 
   };
 
-  const handleSubmit = async (e) => {
+  /* =========================
+     HANDLE SUBMIT
+  ========================= */
+
+  const handleSubmit = async (
+    e
+  ) => {
 
     e.preventDefault();
 
-    try {
+    setLoading(true);
 
-      setLoading(true);
+    setMessage("");
+
+    try {
 
       await axios.post(
         "https://pradheepsiva.onrender.com/api/shop/add",
@@ -50,12 +64,44 @@ function ShopForm() {
         "Shop Added Successfully"
       );
 
-      window.location.href =
-        "/mobile";
+      setMessage(
+        "Shop Added Successfully"
+      );
+
+      /* RESET FORM */
+
+      setShopData({
+
+        shopName: "",
+
+        ownerName: "",
+
+        mobileNumber: "",
+
+        address: "",
+
+      });
+
+      /* REDIRECT */
+
+      setTimeout(() => {
+
+        window.location.href =
+          "/mobile";
+
+      }, 1000);
 
     } catch (error) {
 
       console.log(error);
+
+      setMessage(
+        "Failed To Add Shop"
+      );
+
+      alert(
+        "Failed To Add Shop"
+      );
 
     } finally {
 
@@ -65,58 +111,107 @@ function ShopForm() {
 
   };
 
+  /* =========================
+     UI
+  ========================= */
+
   return (
 
-    <section className="newentry">
+    <section className="shop-form-page">
 
-      <h2>
-        Add Shop
-      </h2>
+      <div className="shop-form-container">
 
-      <form onSubmit={handleSubmit}>
+        <h2 className="form-title">
 
-        <input
-          type="text"
-          name="shopName"
-          placeholder="Shop Name"
-          onChange={handleChange}
-        />
+          Add Shop
 
-        <input
-          type="text"
-          name="ownerName"
-          placeholder="Owner Name"
-          onChange={handleChange}
-        />
+        </h2>
 
-        <input
-          type="number"
-          name="mobileNumber"
-          placeholder="Mobile Number"
-          onChange={handleChange}
-        />
+        <form
+          onSubmit={handleSubmit}
+          className="shop-form"
+        >
 
-        <textarea
-          name="address"
-          placeholder="Address"
-          onChange={handleChange}
-        />
+          {/* SHOP NAME */}
 
-        <button type="submit">
+          <input
+            type="text"
+            name="shopName"
+            placeholder="Enter Shop Name"
+            value={
+              shopData.shopName
+            }
+            onChange={handleChange}
+            required
+          />
 
-          {
+          {/* OWNER NAME */}
 
-            loading
+          <input
+            type="text"
+            name="ownerName"
+            placeholder="Enter Owner Name"
+            value={
+              shopData.ownerName
+            }
+            onChange={handleChange}
+            required
+          />
 
+          {/* MOBILE NUMBER */}
+
+          <input
+            type="tel"
+            name="mobileNumber"
+            placeholder="Enter Mobile Number"
+            value={
+              shopData.mobileNumber
+            }
+            onChange={handleChange}
+            required
+          />
+
+          {/* ADDRESS */}
+
+          <textarea
+            name="address"
+            placeholder="Enter Address"
+            value={
+              shopData.address
+            }
+            onChange={handleChange}
+            rows="4"
+            required
+          />
+
+          {/* BUTTON */}
+
+          <button
+            type="submit"
+            disabled={loading}
+          >
+
+            {loading
               ? "Submitting..."
+              : "Add Shop"}
 
-              : "Add Shop"
+          </button>
 
-          }
+        </form>
 
-        </button>
+        {/* MESSAGE */}
 
-      </form>
+        {message && (
+
+          <p className="form-message">
+
+            {message}
+
+          </p>
+
+        )}
+
+      </div>
 
     </section>
 

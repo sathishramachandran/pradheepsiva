@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import axios from "axios";
 
 function ShopMobiles() {
@@ -7,14 +6,21 @@ function ShopMobiles() {
   const [mobiles, setMobiles] =
     useState([]);
 
+  const [loading, setLoading] =
+    useState(true);
+
+  const shopName =
+    localStorage.getItem(
+      "shopName"
+    );
+
+  /* =========================
+     GET MOBILES
+  ========================= */
+
   const getMobiles = async () => {
 
     try {
-
-      const shopName =
-        localStorage.getItem(
-          "shopName"
-        );
 
       const response =
         await axios.get(
@@ -29,6 +35,10 @@ function ShopMobiles() {
 
       console.log(error);
 
+    } finally {
+
+      setLoading(false);
+
     }
 
   };
@@ -39,60 +49,251 @@ function ShopMobiles() {
 
   }, []);
 
+  /* =========================
+     LOGOUT
+  ========================= */
+
+  const handleLogout = () => {
+
+    localStorage.clear();
+
+    window.location.href =
+      "/login";
+
+  };
+
+  /* =========================
+     STATUS STYLE
+  ========================= */
+
+  const getStatusClass = (
+    status
+  ) => {
+
+    if (
+      status === "Completed"
+    ) {
+
+      return "completed";
+
+    }
+
+    return "pending";
+
+  };
+
+  /* =========================
+     UI
+  ========================= */
+
   return (
 
-    <div className="mobile-list">
+    <div className="shop-mobile-page">
 
-      <h1>
-        Shop Mobiles
-      </h1>
+      {/* HEADER */}
 
-      <div className="shop-section">
+      <div className="shop-header">
 
-        {
+        <div>
 
-          mobiles.map((mobile) => (
+          <h1>
+            Shop Mobiles
+          </h1>
 
-            <div
-              className="mobile-card"
-              key={mobile._id}
-            >
+          <h3>
+            Shop :
+            {shopName}
+          </h3>
 
-              <p>
-                Brand :
-                {
-                  mobile.mobileBrand
-                }
-              </p>
+        </div>
 
-              <p>
-                Model :
-                {
-                  mobile.mobileModel
-                }
-              </p>
+        <button
+          onClick={handleLogout}
+          className="logout-btn"
+        >
 
-              <p>
-                Issue :
-                {
-                  mobile.mobileIssue
-                }
-              </p>
+          Logout
 
-              <p>
-                Status :
-                {
-                  mobile.status
-                }
-              </p>
-
-            </div>
-
-          ))
-
-        }
+        </button>
 
       </div>
+
+      {/* MOBILE LIST */}
+
+      {
+
+        loading ? (
+
+          <h2 className="loading-text">
+
+            Loading...
+
+          </h2>
+
+        ) : mobiles.length ===
+          0 ? (
+
+          <h2 className="empty-text">
+
+            No Mobile Entries Found
+
+          </h2>
+
+        ) : (
+
+          <div className="mobile-grid">
+
+            {
+
+              mobiles.map(
+                (mobile) => (
+
+                  <div
+                    className="mobile-card"
+                    key={
+                      mobile._id
+                    }
+                  >
+
+                    <h2>
+
+                      {
+                        mobile.mobileBrand
+                      }
+
+                    </h2>
+
+                    <p>
+
+                      <strong>
+                        Model :
+                      </strong>
+
+                      {
+                        mobile.mobileModel
+                      }
+
+                    </p>
+
+                    <p>
+
+                      <strong>
+                        Issue :
+                      </strong>
+
+                      {
+                        mobile.mobileIssue
+                      }
+
+                    </p>
+
+                    <p>
+
+                      <strong>
+                        Entry Date :
+                      </strong>
+
+                      {
+                        mobile.entryDate
+                      }
+
+                    </p>
+
+                    <p>
+
+                      <strong>
+                        Remaining Days :
+                      </strong>
+
+                      {
+                        mobile.remainingDays ||
+                        0
+                      }
+
+                    </p>
+
+                    {/* PARTS */}
+
+                    <div className="parts-box">
+
+                      <strong>
+                        Parts :
+                      </strong>
+
+                      {
+
+                        mobile.mobileParts &&
+                        mobile.mobileParts
+                          .length >
+                          0 ? (
+
+                          <ul>
+
+                            {
+
+                              mobile.mobileParts.map(
+                                (
+                                  part,
+                                  index
+                                ) => (
+
+                                  <li
+                                    key={
+                                      index
+                                    }
+                                  >
+
+                                    {
+                                      part
+                                    }
+
+                                  </li>
+
+                                )
+                              )
+
+                            }
+
+                          </ul>
+
+                        ) : (
+
+                          <p>
+                            No Parts
+                          </p>
+
+                        )
+
+                      }
+
+                    </div>
+
+                    {/* STATUS */}
+
+                    <div
+                      className={`status-box ${getStatusClass(
+                        mobile.status
+                      )}`}
+                    >
+
+                      {
+                        mobile.status
+                      }
+
+                    </div>
+
+                  </div>
+
+                )
+              )
+
+            }
+
+          </div>
+
+        )
+
+      }
 
     </div>
 

@@ -10,122 +10,167 @@ function Navbar() {
       "shopName"
     );
 
+  const role =
+    localStorage.getItem(
+      "role"
+    );
+
+  /* =========================
+     LOGOUT
+  ========================= */
+
   const logout = () => {
 
-    localStorage.removeItem(
-      "shopName"
-    );
+    localStorage.clear();
 
     window.location.href =
       "/shoplogin";
 
   };
 
-  // HIDE NAVBAR IN SHOP LOGIN
+  /* =========================
+     HIDE NAVBAR
+  ========================= */
 
-  const hideAdminMenu =
-
+  const hideNavbar =
     location.pathname ===
     "/shoplogin";
+
+  if (hideNavbar) {
+
+    return null;
+
+  }
+
+  /* =========================
+     UI
+  ========================= */
 
   return (
 
     <nav className="navbar1">
 
-      {/* SHOP LOGIN PAGE */}
+      {/* LOGO */}
 
-      {
+      <div className="nav-logo">
 
-        hideAdminMenu ? (
+        <Link to="/">
+          Pradheepsiva Mobiles
+        </Link>
 
-          <>
+      </div>
 
-            <Link to="/shoplogin">
+      {/* MENU */}
+
+      <div className="nav-links">
+
+        {/* ADMIN MENU */}
+
+        {
+
+          (!shopName ||
+            role === "admin") && (
+
+            <>
+
+              <Link to="/">
+                Home
+              </Link>
+
+              <Link to="/shop">
+                Add Shop
+              </Link>
+
+              <Link to="/mobile">
+                Add Mobile
+              </Link>
+
+              <Link to="/shoplist">
+                Shop List
+              </Link>
+
+              <Link to="/mobilelist">
+                Mobile List
+              </Link>
+
+              <Link to="/admin">
+                Create User
+              </Link>
+
+            </>
+
+          )
+
+        }
+
+        {/* SHOP USER */}
+
+        {
+
+          role === "shop" &&
+            shopName && (
+
+              <>
+
+                <Link to="/">
+                  Home
+                </Link>
+
+                <Link to="/shopmobiles">
+                  My Mobiles
+                </Link>
+
+              </>
+
+            )
+
+        }
+
+      </div>
+
+      {/* RIGHT SIDE */}
+
+      <div className="nav-right">
+
+        {
+
+          shopName ? (
+
+            <>
+
+              <span className="shop-user">
+
+                {shopName}
+
+              </span>
+
+              <button
+                className="logout-btn"
+                onClick={logout}
+              >
+
+                Logout
+
+              </button>
+
+            </>
+
+          ) : (
+
+            <Link
+              to="/shoplogin"
+              className="login-link"
+            >
+
               Shop Login
+
             </Link>
 
-          </>
+          )
 
-        ) : (
+        }
 
-          <>
-
-            {/* ADMIN MENU */}
-
-            {
-
-              !shopName && (
-
-                <>
-
-                  <Link to="/">
-                    Home
-                  </Link>
-
-                  <Link to="/shop">
-                    Add Shop
-                  </Link>
-
-                  <Link to="/mobile">
-                    Add Mobile
-                  </Link>
-
-                  <Link to="/shoplist">
-                    Shop List
-                  </Link>
-
-                  <Link to="/mobilelist">
-                    Mobile List
-                  </Link>
-
-                  <Link to="/admin">
-                    Create User
-                  </Link>
-
-                  <Link to="/shoplogin">
-                    Shop Login
-                  </Link>
-
-                </>
-
-              )
-
-            }
-
-            {/* SHOP PORTAL */}
-
-            {
-
-              shopName && (
-
-                <>
-
-                  <Link to="/">
-                    Home
-                  </Link>
-
-                  <Link to="/shopmobiles">
-                    My Mobiles
-                  </Link>
-
-                  <button
-                    className="logout-btn"
-                    onClick={logout}
-                  >
-                    Logout
-                  </button>
-
-                </>
-
-              )
-
-            }
-
-          </>
-
-        )
-
-      }
+      </div>
 
     </nav>
 

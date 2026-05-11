@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import axios from "axios";
 
 function ShopLogin() {
@@ -12,6 +11,16 @@ function ShopLogin() {
       password: "",
 
     });
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [message, setMessage] =
+    useState("");
+
+  /* =========================
+     HANDLE CHANGE
+  ========================= */
 
   const handleChange = (e) => {
 
@@ -26,9 +35,17 @@ function ShopLogin() {
 
   };
 
+  /* =========================
+     HANDLE LOGIN
+  ========================= */
+
   const handleLogin = async (e) => {
 
     e.preventDefault();
+
+    setLoading(true);
+
+    setMessage("");
 
     try {
 
@@ -38,53 +55,145 @@ function ShopLogin() {
           loginData
         );
 
+      /* =========================
+         SAVE USER DATA
+      ========================= */
+
       localStorage.setItem(
         "shopName",
         response.data.data.shopName
       );
 
+      localStorage.setItem(
+        "role",
+        response.data.data.role
+      );
+
+      localStorage.setItem(
+        "username",
+        response.data.data.username
+      );
+
       alert("Login Success");
 
-      window.location.href =
-        "/shopmobiles";
+      setMessage(
+        "Login Successful"
+      );
+
+      /* =========================
+         REDIRECT
+      ========================= */
+
+      if (
+        response.data.data.role ===
+        "admin"
+      ) {
+
+        window.location.href =
+          "/";
+
+      } else {
+
+        window.location.href =
+          "/shopmobiles";
+
+      }
 
     } catch (error) {
 
-      alert("Invalid Login");
+      console.log(error);
+
+      setMessage(
+        "Invalid Username Or Password"
+      );
+
+      alert(
+        "Invalid Username Or Password"
+      );
+
+    } finally {
+
+      setLoading(false);
 
     }
 
   };
 
+  /* =========================
+     UI
+  ========================= */
+
   return (
 
-    <section className="newentry">
+    <section className="login-page">
 
-      <h2>
-        Shop Login
-      </h2>
+      <div className="login-container">
 
-      <form onSubmit={handleLogin}>
+        <h2 className="login-title">
 
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          onChange={handleChange}
-        />
+          Shop Login
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-        />
+        </h2>
 
-        <button type="submit">
-          Login
-        </button>
+        <form
+          onSubmit={handleLogin}
+          className="login-form"
+        >
 
-      </form>
+          {/* USERNAME */}
+
+          <input
+            type="text"
+            name="username"
+            placeholder="Enter Username"
+            value={
+              loginData.username
+            }
+            onChange={handleChange}
+            required
+          />
+
+          {/* PASSWORD */}
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            value={
+              loginData.password
+            }
+            onChange={handleChange}
+            required
+          />
+
+          {/* BUTTON */}
+
+          <button
+            type="submit"
+            disabled={loading}
+          >
+
+            {loading
+              ? "Logging In..."
+              : "Login"}
+
+          </button>
+
+        </form>
+
+        {/* MESSAGE */}
+
+        {message && (
+
+          <p className="login-message">
+
+            {message}
+
+          </p>
+
+        )}
+
+      </div>
 
     </section>
 
