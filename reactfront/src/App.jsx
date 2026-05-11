@@ -29,15 +29,15 @@ function App() {
           path="/"
           element={<Home />}
         />
-  <Route
+        <Route
           path="/mobilelist"
           element={<MobileList />}
         />
 
-<Route
-  path="/shoplist"
-  element={<ShopList />}
-/>
+        <Route
+          path="/shoplist"
+          element={<ShopList />}
+        />
 
         <Route
           path="/shop"
@@ -48,7 +48,7 @@ function App() {
           element={<MobileForm />}
         />
 
-      
+
 
       </Routes>
 
