@@ -237,7 +237,7 @@ function MobileForm() {
               button
             </label>
             </div>
-<div className="partsBox1">
+<div className="partsBox2">
 
 
             <label>
