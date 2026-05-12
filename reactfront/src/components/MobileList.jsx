@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
+
 import axios from "axios";
 
 function MobileList() {
+
+  /* =========================
+     STATE
+  ========================= */
 
   const [mobiles, setMobiles] =
     useState([]);
@@ -16,7 +21,7 @@ function MobileList() {
     useState("All");
 
   /* =========================
-     GET ALL MOBILES
+     GET MOBILES
   ========================= */
 
   const getMobiles = async () => {
@@ -46,9 +51,23 @@ function MobileList() {
 
   };
 
+  /* =========================
+     USE EFFECT
+  ========================= */
+
   useEffect(() => {
 
     getMobiles();
+
+    const interval =
+      setInterval(() => {
+
+        getMobiles();
+
+      }, 5000);
+
+    return () =>
+      clearInterval(interval);
 
   }, []);
 
@@ -172,6 +191,7 @@ function MobileList() {
 
   const groupedMobiles =
     filteredMobiles.reduce(
+
       (groups, mobile) => {
 
         if (
@@ -195,6 +215,7 @@ function MobileList() {
       },
 
       {}
+
     );
 
   /* =========================
@@ -207,18 +228,27 @@ function MobileList() {
 
     if (
       status === "Completed"
-    )
+    ) {
+
       return "completed";
+
+    }
 
     if (
       status === "Pending"
-    )
+    ) {
+
       return "pending";
+
+    }
 
     if (
       status === "Return"
-    )
+    ) {
+
       return "return";
+
+    }
 
     return "delivery";
 
@@ -232,13 +262,15 @@ function MobileList() {
 
     <div className="mobile-list-page">
 
+      {/* TITLE */}
+
       <h1 className="main-title">
 
         Mobile Repair List
 
       </h1>
 
-      {/* SEARCH & FILTER */}
+      {/* SEARCH */}
 
       <div className="top-controls">
 
@@ -328,7 +360,7 @@ function MobileList() {
 
                 </h2>
 
-                {/* MOBILE GRID */}
+                {/* GRID */}
 
                 <div className="mobile-grid">
 
@@ -371,13 +403,21 @@ function MobileList() {
                             }
                           >
 
-                            <h3>
+                            {/* BRAND */}
+
+                            <h2>
 
                               {
                                 mobile.mobileBrand
                               }
 
-                            </h3>
+                            </h2>
+
+                       
+
+                        
+
+                            {/* MODEL */}
 
                             <p>
 
@@ -391,6 +431,8 @@ function MobileList() {
 
                             </p>
 
+                            {/* ISSUE */}
+
                             <p>
 
                               <strong>
@@ -403,6 +445,10 @@ function MobileList() {
 
                             </p>
 
+                       
+
+                            {/* PARTS */}
+
                             <p>
 
                               <strong>
@@ -414,14 +460,18 @@ function MobileList() {
                                 Array.isArray(
                                   mobile.mobileParts
                                 )
+
                                   ? mobile.mobileParts.join(
                                       ", "
                                     )
+
                                   : ""
 
                               }
 
                             </p>
+
+                            {/* DATE */}
 
                             <p>
 
@@ -432,6 +482,24 @@ function MobileList() {
                               {
                                 mobile.entryDate
                               }
+
+                            </p>
+
+                            {/* REMAINING */}
+
+                            <p>
+
+                              <strong>
+                                Remaining :
+                              </strong>
+
+                              {
+
+                                mobile.remainingDays || 0
+
+                              }
+
+                              {" "}Days
 
                             </p>
 
@@ -548,6 +616,7 @@ function MobileList() {
                         );
 
                       }
+
                     )
 
                   }
@@ -557,13 +626,17 @@ function MobileList() {
               </div>
 
             )
+
           )
+
+        )
 
       }
 
     </div>
 
   );
+
 }
 
 export default MobileList;

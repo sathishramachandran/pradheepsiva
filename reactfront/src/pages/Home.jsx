@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
+
 import axios from "axios";
 
 function Home() {
 
+  /* =========================
+     STATE
+  ========================= */
+
   const [mobiles, setMobiles] =
+    useState([]);
+
+  const [shops, setShops] =
     useState([]);
 
   const [loading, setLoading] =
@@ -20,42 +28,51 @@ function Home() {
     );
 
   /* =========================
-     GET MOBILES
+     GET DATA
   ========================= */
 
-  const getMobiles = async () => {
+  const getData = async () => {
 
     try {
 
-      let response;
+      let mobileResponse;
 
-      // SHOP LOGIN
+      /* SHOP LOGIN */
 
       if (
         role === "shop" &&
         shopName
       ) {
 
-        response =
+        mobileResponse =
           await axios.get(
             `https://pradheepsiva.onrender.com/api/mobile/shop/${shopName}`
           );
 
       }
 
-      // ADMIN LOGIN
+      /* ADMIN */
 
       else {
 
-        response =
+        mobileResponse =
           await axios.get(
             "https://pradheepsiva.onrender.com/api/mobile/all"
           );
 
       }
 
+      const shopResponse =
+        await axios.get(
+          "https://pradheepsiva.onrender.com/api/shop/all"
+        );
+
       setMobiles(
-        response.data.data || []
+        mobileResponse.data.data || []
+      );
+
+      setShops(
+        shopResponse.data.data || []
       );
 
     } catch (error) {
@@ -70,14 +87,28 @@ function Home() {
 
   };
 
+  /* =========================
+     AUTO REFRESH
+  ========================= */
+
   useEffect(() => {
 
-    getMobiles();
+    getData();
+
+    const interval =
+      setInterval(() => {
+
+        getData();
+
+      }, 5000);
+
+    return () =>
+      clearInterval(interval);
 
   }, []);
 
   /* =========================
-     COUNT
+     COUNTS
   ========================= */
 
   const totalMobiles =
@@ -85,24 +116,42 @@ function Home() {
 
   const pendingMobiles =
     mobiles.filter(
-
       (item) =>
-        item.status !==
-        "Completed"
-
+        item.status ===
+        "Pending"
     ).length;
 
   const completedMobiles =
     mobiles.filter(
-
       (item) =>
         item.status ===
         "Completed"
+    ).length;
 
+  const deliveryMobiles =
+    mobiles.filter(
+      (item) =>
+        item.status ===
+        "Out Delivery"
+    ).length;
+
+  const totalShops =
+    shops.length;
+
+  const todayDate =
+    new Date()
+      .toISOString()
+      .split("T")[0];
+
+  const todayEntries =
+    mobiles.filter(
+      (item) =>
+        item.entryDate ===
+        todayDate
     ).length;
 
   /* =========================
-     RECENT MOBILES
+     RECENT ENTRIES
   ========================= */
 
   const recentMobiles =
@@ -130,8 +179,10 @@ function Home() {
           shopName && (
 
             <h2>
+
               Shop :
               {shopName}
+
             </h2>
 
           )
@@ -143,6 +194,8 @@ function Home() {
       {/* DASHBOARD */}
 
       <div className="dashboard-grid">
+
+        {/* TOTAL */}
 
         <div className="dashboard-card">
 
@@ -156,6 +209,8 @@ function Home() {
 
         </div>
 
+        {/* PENDING */}
+
         <div className="dashboard-card pending-card">
 
           <h3>
@@ -168,6 +223,8 @@ function Home() {
 
         </div>
 
+        {/* COMPLETED */}
+
         <div className="dashboard-card completed-card">
 
           <h3>
@@ -176,6 +233,48 @@ function Home() {
 
           <h1>
             {completedMobiles}
+          </h1>
+
+        </div>
+
+        {/* DELIVERY */}
+
+        <div className="dashboard-card delivery-card">
+
+          <h3>
+            Out Delivery
+          </h3>
+
+          <h1>
+            {deliveryMobiles}
+          </h1>
+
+        </div>
+
+        {/* SHOPS */}
+
+        <div className="dashboard-card shop-card">
+
+          <h3>
+            Total Shops
+          </h3>
+
+          <h1>
+            {totalShops}
+          </h1>
+
+        </div>
+
+        {/* TODAY */}
+
+        <div className="dashboard-card today-card">
+
+          <h3>
+            Today Entries
+          </h3>
+
+          <h1>
+            {todayEntries}
           </h1>
 
         </div>
@@ -268,10 +367,24 @@ function Home() {
 
                           <span
                             className={
+
                               item.status ===
                               "Completed"
+
                                 ? "completed-status"
+
+                                : item.status ===
+                                  "Out Delivery"
+
+                                ? "delivery-status"
+
+                                : item.status ===
+                                  "Return"
+
+                                ? "return-status"
+
                                 : "pending-status"
+
                             }
                           >
 

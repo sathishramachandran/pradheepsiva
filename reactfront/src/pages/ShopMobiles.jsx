@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
+
 import axios from "axios";
 
 function ShopMobiles() {
+
+  /* =========================
+     STATE
+  ========================= */
 
   const [mobiles, setMobiles] =
     useState([]);
 
   const [loading, setLoading] =
     useState(true);
+
+  const [search, setSearch] =
+    useState("");
 
   const shopName =
     localStorage.getItem(
@@ -27,9 +35,36 @@ function ShopMobiles() {
           `https://pradheepsiva.onrender.com/api/mobile/shop/${shopName}`
         );
 
-      setMobiles(
-        response.data.data || []
-      );
+      const latestMobiles =
+        response.data.data || [];
+
+      /* NOTIFICATION */
+
+      latestMobiles.forEach((mobile) => {
+
+        if (
+          mobile.status ===
+          "Completed"
+        ) {
+
+          new Notification(
+
+            "Repair Completed ✅",
+
+            {
+
+              body:
+                `${mobile.mobileBrand} ${mobile.mobileModel} Ready`
+
+            }
+
+          );
+
+        }
+
+      });
+
+      setMobiles(latestMobiles);
 
     } catch (error) {
 
@@ -43,9 +78,25 @@ function ShopMobiles() {
 
   };
 
+  /* =========================
+     AUTO REFRESH
+  ========================= */
+
   useEffect(() => {
 
+    Notification.requestPermission();
+
     getMobiles();
+
+    const interval =
+      setInterval(() => {
+
+        getMobiles();
+
+      }, 5000);
+
+    return () =>
+      clearInterval(interval);
 
   }, []);
 
@@ -58,9 +109,31 @@ function ShopMobiles() {
     localStorage.clear();
 
     window.location.href =
-      "/login";
+      "/shoplogin";
 
   };
+
+  /* =========================
+     SEARCH FILTER
+  ========================= */
+
+  const filteredMobiles =
+    mobiles.filter(
+      (mobile) =>
+
+        mobile.mobileBrand
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          ) ||
+
+        mobile.mobileModel
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          )
+
+    );
 
   /* =========================
      STATUS STYLE
@@ -75,6 +148,22 @@ function ShopMobiles() {
     ) {
 
       return "completed";
+
+    }
+
+    if (
+      status === "Out Delivery"
+    ) {
+
+      return "delivery";
+
+    }
+
+    if (
+      status === "Return"
+    ) {
+
+      return "return";
 
     }
 
@@ -118,7 +207,24 @@ function ShopMobiles() {
 
       </div>
 
-      {/* MOBILE LIST */}
+      {/* SEARCH */}
+
+      <div className="search-box">
+
+        <input
+          type="text"
+          placeholder="Search Mobile..."
+          value={search}
+          onChange={(e) =>
+            setSearch(
+              e.target.value
+            )
+          }
+        />
+
+      </div>
+
+      {/* LIST */}
 
       {
 
@@ -130,12 +236,12 @@ function ShopMobiles() {
 
           </h2>
 
-        ) : mobiles.length ===
+        ) : filteredMobiles.length ===
           0 ? (
 
           <h2 className="empty-text">
 
-            No Mobile Entries Found
+            No Mobiles Found
 
           </h2>
 
@@ -145,7 +251,7 @@ function ShopMobiles() {
 
             {
 
-              mobiles.map(
+              filteredMobiles.map(
                 (mobile) => (
 
                   <div
@@ -162,6 +268,9 @@ function ShopMobiles() {
                       }
 
                     </h2>
+
+
+               
 
                     <p>
 
@@ -187,10 +296,12 @@ function ShopMobiles() {
 
                     </p>
 
+               
+
                     <p>
 
                       <strong>
-                        Entry Date :
+                        Entry :
                       </strong>
 
                       {
@@ -202,13 +313,16 @@ function ShopMobiles() {
                     <p>
 
                       <strong>
-                        Remaining Days :
+                        Remaining :
                       </strong>
 
                       {
-                        mobile.remainingDays ||
-                        0
+
+                        mobile.remainingDays || 0
+
                       }
+
+                      {" "}Days
 
                     </p>
 
@@ -223,46 +337,48 @@ function ShopMobiles() {
                       {
 
                         mobile.mobileParts &&
-                        mobile.mobileParts
-                          .length >
-                          0 ? (
+                        mobile.mobileParts.length > 0
 
-                          <ul>
+                          ? (
 
-                            {
+                            <ul>
 
-                              mobile.mobileParts.map(
-                                (
-                                  part,
-                                  index
-                                ) => (
+                              {
 
-                                  <li
-                                    key={
-                                      index
-                                    }
-                                  >
+                                mobile.mobileParts.map(
+                                  (
+                                    part,
+                                    index
+                                  ) => (
 
-                                    {
-                                      part
-                                    }
+                                    <li
+                                      key={
+                                        index
+                                      }
+                                    >
 
-                                  </li>
+                                      {
+                                        part
+                                      }
 
+                                    </li>
+
+                                  )
                                 )
-                              )
 
-                            }
+                              }
 
-                          </ul>
+                            </ul>
 
-                        ) : (
+                          )
 
-                          <p>
-                            No Parts
-                          </p>
+                          : (
 
-                        )
+                            <p>
+                              No Parts
+                            </p>
+
+                          )
 
                       }
 
@@ -281,6 +397,42 @@ function ShopMobiles() {
                       }
 
                     </div>
+
+                    {/* WHATSAPP */}
+
+                    <button
+                      className="whatsapp-btn"
+                      onClick={() => {
+
+                        const message =
+
+`Hello ${mobile.customerName},
+
+Your Mobile Repair Status
+
+Brand :
+${mobile.mobileBrand}
+
+Model :
+${mobile.mobileModel}
+
+Status :
+${mobile.status}
+
+- Pradheepsiva Mobiles`;
+
+                        window.open(
+
+`https://wa.me/91${mobile.customerPhone}?text=${encodeURIComponent(message)}`
+
+                        );
+
+                      }}
+                    >
+
+                      WhatsApp
+
+                    </button>
 
                   </div>
 
