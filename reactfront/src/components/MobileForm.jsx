@@ -145,7 +145,7 @@ function MobileForm() {
 
       mobileIssue:
         mobileData.mobileIssue ===
-        "Other"
+          "Other"
 
           ? otherIssue
 
@@ -208,11 +208,11 @@ function MobileForm() {
 
     "Battery",
 
-    
+
 
     "Speaker",
 
-   
+
 
 
     "Fingerprint",
@@ -221,11 +221,11 @@ function MobileForm() {
 
     "Camera",
 
-   
+
 
     "Button",
 
-  
+
 
   ];
 
@@ -362,7 +362,7 @@ function MobileForm() {
           {
 
             mobileData.mobileIssue ===
-              "Other" && (
+            "Other" && (
 
               <input
                 type="text"
