@@ -208,13 +208,12 @@ function MobileForm() {
 
     "Battery",
 
-    "Mic",
+    
 
     "Speaker",
 
-    "Charging Pin",
+   
 
-    "Motherboard",
 
     "Fingerprint",
 
@@ -222,11 +221,11 @@ function MobileForm() {
 
     "Camera",
 
-    "Touch",
+   
 
     "Button",
 
-    "Network IC",
+  
 
   ];
 
