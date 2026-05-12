@@ -2,301 +2,484 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function MobileForm() {
-  const [mobileData, setMobileData] = useState({
-    shopName: "",
-    mobileBrand: "",
-    mobileModel: "",
-    mobileIssue: "",
-    mobileParts: [],
-    entryDate: "",
-  });
 
-  // OTHER ISSUE STATE
-  const [otherIssue, setOtherIssue] = useState("");
+  const [mobileData, setMobileData] =
+    useState({
+
+      shopName: "",
+
+      mobileBrand: "",
+
+      mobileModel: "",
+
+      mobileIssue: "",
+
+      mobileParts: [],
+
+      entryDate: "",
+
+    });
+
+  /* =========================
+     OTHER ISSUE
+  ========================= */
+
+  const [otherIssue, setOtherIssue] =
+    useState("");
+
+  /* =========================
+     LOADING
+  ========================= */
+
+  const [loading, setLoading] =
+    useState(false);
 
   /* =========================
      SHOPS
   ========================= */
 
-  const [shops, setShops] = useState([]);
+  const [shops, setShops] =
+    useState([]);
 
   /* =========================
      GET SHOPS
   ========================= */
 
   const getShops = async () => {
+
     try {
-      const response = await axios.get(
-        "https://pradheepsiva.onrender.com/api/shop/all"
+
+      const response =
+        await axios.get(
+          "https://pradheepsiva.onrender.com/api/shop/all"
+        );
+
+      setShops(
+        response.data.data || []
       );
 
-      setShops(response.data.data || []);
     } catch (error) {
+
       console.log(error);
 
       setShops([]);
+
     }
+
   };
 
   useEffect(() => {
+
     getShops();
+
   }, []);
 
   /* =========================
-     HANDLE INPUT CHANGE
+     HANDLE INPUT
   ========================= */
 
   const handleChange = (e) => {
+
     setMobileData({
+
       ...mobileData,
-      [e.target.name]: e.target.value,
+
+      [e.target.name]:
+        e.target.value,
+
     });
+
   };
 
   /* =========================
-     HANDLE PARTS CHECKBOX
+     HANDLE PARTS
   ========================= */
 
-  const handlePartsChange = (e) => {
-    const value = e.target.value;
+  const handlePartsChange = (
+    e
+  ) => {
+
+    const value =
+      e.target.value;
 
     if (e.target.checked) {
+
       setMobileData({
+
         ...mobileData,
-        mobileParts: [...mobileData.mobileParts, value],
+
+        mobileParts: [
+
+          ...mobileData.mobileParts,
+
+          value,
+
+        ],
+
       });
+
     } else {
+
       setMobileData({
+
         ...mobileData,
-        mobileParts: mobileData.mobileParts.filter(
-          (item) => item !== value
-        ),
+
+        mobileParts:
+          mobileData.mobileParts.filter(
+            (item) =>
+              item !== value
+          ),
+
       });
+
     }
+
   };
 
   /* =========================
      HANDLE SUBMIT
   ========================= */
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (
+    e
+  ) => {
+
     e.preventDefault();
 
+    setLoading(true);
+
     const finalData = {
+
       ...mobileData,
 
       mobileIssue:
-        mobileData.mobileIssue === "Other"
+        mobileData.mobileIssue ===
+        "Other"
           ? otherIssue
           : mobileData.mobileIssue,
+
     };
 
     try {
+
       await axios.post(
         "https://pradheepsiva.onrender.com/api/mobile/add",
         finalData
       );
 
-      alert("Mobile Added Successfully");
+      alert(
+        "Mobile Added Successfully"
+      );
 
       setMobileData({
+
         shopName: "",
+
         mobileBrand: "",
+
         mobileModel: "",
+
         mobileIssue: "",
+
         mobileParts: [],
+
         entryDate: "",
+
       });
 
       setOtherIssue("");
+
     } catch (error) {
+
       console.log(error);
 
       alert("Submit Failed");
+
+    } finally {
+
+      setLoading(false);
+
     }
+
   };
+
+  /* =========================
+     PARTS ARRAY
+  ========================= */
+
+  const mobilePartsList = [
+
+    "camera",
+
+    "sim tray",
+
+    "button",
+
+    "Battery",
+
+    "Back Door",
+
+    "ringer speaker",
+
+    "center strip",
+
+    "Display",
+
+    "Touch",
+
+    "Charging Pin",
+
+    "Mic",
+
+    "Speaker",
+
+    "Fingerprint",
+
+    "Motherboard",
+
+  ];
 
   /* =========================
      UI
   ========================= */
 
   return (
-    <section className="newentry">
-      <h2>Add New Mobile</h2>
 
-      <form onSubmit={handleSubmit}>
-        {/* SHOP DROPDOWN */}
+    <section className="mobile-form-page">
 
-        <select
-          name="shopName"
-          value={mobileData.shopName}
-          onChange={handleChange}
-          required
+      <div className="mobile-form-container">
+
+        <h2>
+          Add New Mobile
+        </h2>
+
+        <form
+          onSubmit={handleSubmit}
+          className="mobile-form"
         >
-          <option value="">Select Shop</option>
 
-          {Array.isArray(shops) &&
-            shops.map((shop) => (
-              <option key={shop._id} value={shop.shopName}>
-                {shop.shopName}
-              </option>
-            ))}
-        </select>
+          {/* SHOP */}
 
-        {/* MOBILE BRAND */}
+          <select
+            name="shopName"
+            value={
+              mobileData.shopName
+            }
+            onChange={handleChange}
+            required
+          >
 
-        <input
-          type="text"
-          name="mobileBrand"
-          placeholder="Mobile Brand"
-          value={mobileData.mobileBrand}
-          onChange={handleChange}
-          required
-        />
+            <option value="">
+              Select Shop
+            </option>
 
-        {/* MOBILE MODEL */}
+            {
 
-        <input
-          type="text"
-          name="mobileModel"
-          placeholder="Mobile Model"
-          value={mobileData.mobileModel}
-          onChange={handleChange}
-          required
-        />
+              Array.isArray(
+                shops
+              ) &&
+                shops.map(
+                  (shop) => (
 
-        {/* MOBILE ISSUE */}
+                    <option
+                      key={
+                        shop._id
+                      }
+                      value={
+                        shop.shopName
+                      }
+                    >
 
-        <select
-          name="mobileIssue"
-          value={mobileData.mobileIssue}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Issue</option>
+                      {
+                        shop.shopName
+                      }
 
-          <option value="Dead">Dead</option>
+                    </option>
 
-          <option value="Charging">Charging</option>
+                  )
+                )
 
-          <option value="Display">Display</option>
+            }
 
-          <option value="Network">Network</option>
+          </select>
 
-          <option value="Software">Software</option>
+          {/* BRAND */}
 
-          <option value="Mic">Mic</option>
-
-          <option value="Water Lock">Water Lock</option>
-
-          <option value="Other">Other</option>
-        </select>
-
-        {/* OTHER ISSUE */}
-
-        {mobileData.mobileIssue === "Other" && (
           <input
             type="text"
-            placeholder="Enter Other Issue"
-            value={otherIssue}
-            onChange={(e) => setOtherIssue(e.target.value)}
+            name="mobileBrand"
+            placeholder="Mobile Brand"
+            value={
+              mobileData.mobileBrand
+            }
+            onChange={handleChange}
             required
           />
-        )}
 
-        {/* MOBILE PARTS */}
-        <div className="partsBox">
-          <div className="partsBox1">
-            <h3>Select Mobile Parts</h3>
-            <label>
-              <input
-                type="checkbox"
-                value="camera"
-                checked={mobileData.mobileParts.includes("camera")}
-                onChange={handlePartsChange}
-              />
-              camera
-            </label>
+          {/* MODEL */}
 
-            <label>
+          <input
+            type="text"
+            name="mobileModel"
+            placeholder="Mobile Model"
+            value={
+              mobileData.mobileModel
+            }
+            onChange={handleChange}
+            required
+          />
+
+          {/* ISSUE */}
+
+          <select
+            name="mobileIssue"
+            value={
+              mobileData.mobileIssue
+            }
+            onChange={handleChange}
+            required
+          >
+
+            <option value="">
+              Select Issue
+            </option>
+
+            <option value="Dead">
+              Dead
+            </option>
+
+            <option value="Charging">
+              Charging
+            </option>
+
+            <option value="Display">
+              Display
+            </option>
+
+            <option value="Network">
+              Network
+            </option>
+
+            <option value="Software">
+              Software
+            </option>
+
+            <option value="Mic">
+              Mic
+            </option>
+
+            <option value="Water Lock">
+              Water Lock
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+
+          </select>
+
+          {/* OTHER ISSUE */}
+
+          {
+
+            mobileData.mobileIssue ===
+              "Other" && (
+
               <input
-                type="checkbox"
-                value="sim tray"
-                checked={mobileData.mobileParts.includes("sim tray")}
-                onChange={handlePartsChange}
+                type="text"
+                placeholder="Enter Other Issue"
+                value={otherIssue}
+                onChange={(e) =>
+                  setOtherIssue(
+                    e.target.value
+                  )
+                }
+                required
               />
-              sim tray
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="button"
-                checked={mobileData.mobileParts.includes("button")}
-                onChange={handlePartsChange}
-              />
-              button
-            </label>
+
+            )
+
+          }
+
+          {/* PARTS */}
+
+          <div className="parts-box">
+
+            <h3>
+              Select Mobile Parts
+            </h3>
+
+            <div className="parts-grid">
+
+              {
+
+                mobilePartsList.map(
+                  (
+                    part,
+                    index
+                  ) => (
+
+                    <label
+                      key={index}
+                      className="part-item"
+                    >
+
+                      <input
+                        type="checkbox"
+                        value={part}
+                        checked={mobileData.mobileParts.includes(
+                          part
+                        )}
+                        onChange={
+                          handlePartsChange
+                        }
+                      />
+
+                      {part}
+
+                    </label>
+
+                  )
+                )
+
+              }
+
             </div>
-<div className="partsBox2">
 
-
-            <label>
-              <input
-                type="checkbox"
-                value="Battery"
-                checked={mobileData.mobileParts.includes("Battery")}
-                onChange={handlePartsChange}
-                />
-              Battery
-            </label>
-
-            <label>
-              <input
-                type="checkbox"
-                value="Back Door"
-                checked={mobileData.mobileParts.includes("Back Door")}
-                onChange={handlePartsChange}
-                />
-              Back Door
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="ringer speaker"
-                checked={mobileData.mobileParts.includes("ringer speaker")}
-                onChange={handlePartsChange}
-              />
-              ringer speaker
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="center strip"
-                checked={mobileData.mobileParts.includes("center strip")}
-                onChange={handlePartsChange}
-                />
-              center strip
-            </label>
-                
           </div>
-        </div>
 
-        {/* ENTRY DATE */}
+          {/* ENTRY DATE */}
 
-        <input
-          type="date"
-          name="entryDate"
-          value={mobileData.entryDate}
-          onChange={handleChange}
-          required
-        />
+          <input
+            type="date"
+            name="entryDate"
+            value={
+              mobileData.entryDate
+            }
+            onChange={handleChange}
+            required
+          />
 
-        {/* SUBMIT BUTTON */}
+          {/* BUTTON */}
 
-        <button type="submit">Submit</button>
-      </form>
+          <button
+            type="submit"
+            disabled={loading}
+          >
+
+            {loading
+              ? "Submitting..."
+              : "Submit"}
+
+          </button>
+
+        </form>
+
+      </div>
+
     </section>
+
   );
 }
 
-export default MobileForm;  
+export default MobileForm;
