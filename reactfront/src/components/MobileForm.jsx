@@ -13,8 +13,6 @@ function MobileForm() {
 
       shopName: "",
 
-     
-
       mobileBrand: "",
 
       mobileModel: "",
@@ -139,19 +137,6 @@ function MobileForm() {
 
     e.preventDefault();
 
-    /* VALIDATION */
-
-    if (
-      mobileData.customerPhone
-        .length !== 10
-    ) {
-
-      return alert(
-        "Phone Number Must Be 10 Digits"
-      );
-
-    }
-
     setLoading(true);
 
     const finalData = {
@@ -184,10 +169,6 @@ function MobileForm() {
       setMobileData({
 
         shopName: "",
-
-        customerName: "",
-
-        customerPhone: "",
 
         mobileBrand: "",
 
@@ -305,10 +286,6 @@ function MobileForm() {
             }
 
           </select>
-
-         
-
-    
 
           {/* BRAND */}
 
@@ -489,6 +466,7 @@ function MobileForm() {
     </section>
 
   );
+
 }
 
 export default MobileForm;
