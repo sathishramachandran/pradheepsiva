@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
+
 import axios from "axios";
 
 function MobileList() {
+
+  /* =========================
+     STATE
+  ========================= */
 
   const [mobiles, setMobiles] =
     useState([]);
@@ -12,8 +17,11 @@ function MobileList() {
   const [search, setSearch] =
     useState("");
 
+  const [filterStatus, setFilterStatus] =
+    useState("All");
+
   /* =========================
-     GET ALL MOBILES
+     GET MOBILES
   ========================= */
 
   const getMobiles = async () => {
@@ -43,57 +51,25 @@ function MobileList() {
 
   };
 
-  useEffect(() => {
-
-    getMobiles();
-
-  }, []);
-
   /* =========================
-     ALERT NOTIFICATION
+     USE EFFECT
   ========================= */
 
   useEffect(() => {
 
-    mobiles.forEach((mobile) => {
+    getMobiles();
 
-      if (
-        mobile.status ===
-        "Completed"
-      )
-        return;
+    const interval =
+      setInterval(() => {
 
-      const today =
-        new Date();
+        getMobiles();
 
-      const entryDate =
-        new Date(
-          mobile.entryDate
-        );
+      }, 5000);
 
-      const diffTime =
-        today - entryDate;
+    return () =>
+      clearInterval(interval);
 
-      const diffDays =
-        Math.floor(
-          diffTime /
-            (1000 *
-              60 *
-              60 *
-              24)
-        );
-
-      if (diffDays >= 3) {
-
-        console.log(
-          `${mobile.mobileModel} pending ${diffDays} days`
-        );
-
-      }
-
-    });
-
-  }, [mobiles]);
+  }, []);
 
   /* =========================
      DELETE MOBILE
@@ -164,35 +140,58 @@ function MobileList() {
   };
 
   /* =========================
-     SEARCH FILTER
+     FILTER
   ========================= */
 
   const filteredMobiles =
     mobiles.filter(
-      (mobile) =>
-        mobile.shopName
-          ?.toLowerCase()
-          .includes(
-            search.toLowerCase()
-          ) ||
-        mobile.mobileBrand
-          ?.toLowerCase()
-          .includes(
-            search.toLowerCase()
-          ) ||
-        mobile.mobileModel
-          ?.toLowerCase()
-          .includes(
-            search.toLowerCase()
-          )
+      (mobile) => {
+
+        const searchMatch =
+
+          mobile.shopName
+            ?.toLowerCase()
+            .includes(
+              search.toLowerCase()
+            ) ||
+
+          mobile.mobileBrand
+            ?.toLowerCase()
+            .includes(
+              search.toLowerCase()
+            ) ||
+
+          mobile.mobileModel
+            ?.toLowerCase()
+            .includes(
+              search.toLowerCase()
+            );
+
+        const statusMatch =
+
+          filterStatus ===
+          "All"
+
+            ? true
+
+            : mobile.status ===
+              filterStatus;
+
+        return (
+          searchMatch &&
+          statusMatch
+        );
+
+      }
     );
 
   /* =========================
-     GROUP BY SHOP NAME
+     GROUP BY SHOP
   ========================= */
 
   const groupedMobiles =
     filteredMobiles.reduce(
+
       (groups, mobile) => {
 
         if (
@@ -216,6 +215,7 @@ function MobileList() {
       },
 
       {}
+
     );
 
   /* =========================
@@ -228,18 +228,27 @@ function MobileList() {
 
     if (
       status === "Completed"
-    )
+    ) {
+
       return "completed";
+
+    }
 
     if (
       status === "Pending"
-    )
+    ) {
+
       return "pending";
+
+    }
 
     if (
       status === "Return"
-    )
+    ) {
+
       return "return";
+
+    }
 
     return "delivery";
 
@@ -253,6 +262,8 @@ function MobileList() {
 
     <div className="mobile-list-page">
 
+      {/* TITLE */}
+
       <h1 className="main-title">
 
         Mobile Repair List
@@ -261,7 +272,7 @@ function MobileList() {
 
       {/* SEARCH */}
 
-      <div className="search-box">
+      <div className="top-controls">
 
         <input
           type="text"
@@ -274,7 +285,40 @@ function MobileList() {
           }
         />
 
+        <select
+          value={filterStatus}
+          onChange={(e) =>
+            setFilterStatus(
+              e.target.value
+            )
+          }
+        >
+
+          <option value="All">
+            All Status
+          </option>
+
+          <option value="Pending">
+            Pending
+          </option>
+
+          <option value="Completed">
+            Completed
+          </option>
+
+          <option value="Return">
+            Return
+          </option>
+
+          <option value="Out Delivery">
+            Delivery
+          </option>
+
+        </select>
+
       </div>
+
+      {/* LOADING */}
 
       {
 
@@ -316,7 +360,7 @@ function MobileList() {
 
                 </h2>
 
-                {/* MOBILES */}
+                {/* GRID */}
 
                 <div className="mobile-grid">
 
@@ -359,13 +403,21 @@ function MobileList() {
                             }
                           >
 
-                            <h3>
+                            {/* BRAND */}
+
+                            <h2>
 
                               {
                                 mobile.mobileBrand
                               }
 
-                            </h3>
+                            </h2>
+
+                       
+
+                        
+
+                            {/* MODEL */}
 
                             <p>
 
@@ -379,6 +431,8 @@ function MobileList() {
 
                             </p>
 
+                            {/* ISSUE */}
+
                             <p>
 
                               <strong>
@@ -391,6 +445,10 @@ function MobileList() {
 
                             </p>
 
+                       
+
+                            {/* PARTS */}
+
                             <p>
 
                               <strong>
@@ -402,14 +460,18 @@ function MobileList() {
                                 Array.isArray(
                                   mobile.mobileParts
                                 )
+
                                   ? mobile.mobileParts.join(
                                       ", "
                                     )
+
                                   : ""
 
                               }
 
                             </p>
+
+                            {/* DATE */}
 
                             <p>
 
@@ -420,6 +482,24 @@ function MobileList() {
                               {
                                 mobile.entryDate
                               }
+
+                            </p>
+
+                            {/* REMAINING */}
+
+                            <p>
+
+                              <strong>
+                                Remaining :
+                              </strong>
+
+                              {
+
+                                mobile.remainingDays || 0
+
+                              }
+
+                              {" "}Days
 
                             </p>
 
@@ -536,6 +616,7 @@ function MobileList() {
                         );
 
                       }
+
                     )
 
                   }
@@ -545,13 +626,17 @@ function MobileList() {
               </div>
 
             )
+
           )
+
+        )
 
       }
 
     </div>
 
   );
+
 }
 
 export default MobileList;

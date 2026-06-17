@@ -1,13 +1,18 @@
 import { useState } from "react";
+
 import axios from "axios";
 
 function ShopForm() {
 
+  /* =========================
+     STATE
+  ========================= */
+
   const [loading, setLoading] =
     useState(false);
 
-  const [message, setMessage] =
-    useState("");
+  const [successData, setSuccessData] =
+    useState(null);
 
   const [shopData, setShopData] =
     useState({
@@ -40,7 +45,7 @@ function ShopForm() {
   };
 
   /* =========================
-     HANDLE SUBMIT
+     SUBMIT
   ========================= */
 
   const handleSubmit = async (
@@ -49,26 +54,78 @@ function ShopForm() {
 
     e.preventDefault();
 
-    setLoading(true);
+    /* VALIDATION */
 
-    setMessage("");
+    if (
+      shopData.mobileNumber
+        .length !== 10
+    ) {
+
+      return alert(
+        "Mobile Number Must Be 10 Digits"
+      );
+
+    }
+
+    setLoading(true);
 
     try {
 
+      /* ADD SHOP */
+
       await axios.post(
+
         "https://pradheepsiva.onrender.com/api/shop/add",
+
         shopData
+
       );
+
+      /* CREATE LOGIN */
+
+      const username =
+
+        shopData.shopName
+          .toLowerCase()
+          .replace(/\s/g, "");
+
+      const password =
+        shopData.mobileNumber;
+
+      await axios.post(
+
+        "https://pradheepsiva.onrender.com/api/user/create",
+
+        {
+
+          shopName:
+            shopData.shopName,
+
+          username,
+
+          password,
+
+          role: "shop",
+
+        }
+
+      );
+
+      /* SUCCESS */
+
+      setSuccessData({
+
+        username,
+
+        password,
+
+      });
 
       alert(
         "Shop Added Successfully"
       );
 
-      setMessage(
-        "Shop Added Successfully"
-      );
-
-      /* RESET FORM */
+      /* RESET */
 
       setShopData({
 
@@ -82,22 +139,9 @@ function ShopForm() {
 
       });
 
-      /* REDIRECT */
-
-      setTimeout(() => {
-
-        window.location.href =
-          "/mobile";
-
-      }, 1000);
-
     } catch (error) {
 
       console.log(error);
-
-      setMessage(
-        "Failed To Add Shop"
-      );
 
       alert(
         "Failed To Add Shop"
@@ -123,7 +167,7 @@ function ShopForm() {
 
         <h2 className="form-title">
 
-          Add Shop
+          Add New Shop
 
         </h2>
 
@@ -132,7 +176,7 @@ function ShopForm() {
           className="shop-form"
         >
 
-          {/* SHOP NAME */}
+          {/* SHOP */}
 
           <input
             type="text"
@@ -145,7 +189,7 @@ function ShopForm() {
             required
           />
 
-          {/* OWNER NAME */}
+          {/* OWNER */}
 
           <input
             type="text"
@@ -158,10 +202,10 @@ function ShopForm() {
             required
           />
 
-          {/* MOBILE NUMBER */}
+          {/* MOBILE */}
 
           <input
-            type="tel"
+            type="number"
             name="mobileNumber"
             placeholder="Enter Mobile Number"
             value={
@@ -175,12 +219,12 @@ function ShopForm() {
 
           <textarea
             name="address"
+            rows="4"
             placeholder="Enter Address"
             value={
               shopData.address
             }
             onChange={handleChange}
-            rows="4"
             required
           />
 
@@ -191,25 +235,65 @@ function ShopForm() {
             disabled={loading}
           >
 
-            {loading
-              ? "Submitting..."
-              : "Add Shop"}
+            {
+
+              loading
+
+                ? "Creating..."
+
+                : "Add Shop"
+
+            }
 
           </button>
 
         </form>
 
-        {/* MESSAGE */}
+        {/* LOGIN DETAILS */}
 
-        {message && (
+        {
 
-          <p className="form-message">
+          successData && (
 
-            {message}
+            <div className="success-card">
 
-          </p>
+              <h3>
+                Shop Login Created
+              </h3>
 
-        )}
+              <p>
+
+                <strong>
+                  Username :
+                </strong>
+
+                {" "}
+
+                {
+                  successData.username
+                }
+
+              </p>
+
+              <p>
+
+                <strong>
+                  Password :
+                </strong>
+
+                {" "}
+
+                {
+                  successData.password
+                }
+
+              </p>
+
+            </div>
+
+          )
+
+        }
 
       </div>
 

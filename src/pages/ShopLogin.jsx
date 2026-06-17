@@ -1,7 +1,12 @@
 import { useState } from "react";
+
 import axios from "axios";
 
 function ShopLogin() {
+
+  /* =========================
+     STATE
+  ========================= */
 
   const [loginData, setLoginData] =
     useState({
@@ -17,6 +22,9 @@ function ShopLogin() {
 
   const [message, setMessage] =
     useState("");
+
+  const [showPassword, setShowPassword] =
+    useState(false);
 
   /* =========================
      HANDLE CHANGE
@@ -36,12 +44,25 @@ function ShopLogin() {
   };
 
   /* =========================
-     HANDLE LOGIN
+     LOGIN
   ========================= */
 
   const handleLogin = async (e) => {
 
     e.preventDefault();
+
+    /* VALIDATION */
+
+    if (
+      !loginData.username ||
+      !loginData.password
+    ) {
+
+      return setMessage(
+        "Please Fill All Fields"
+      );
+
+    }
 
     setLoading(true);
 
@@ -51,63 +72,69 @@ function ShopLogin() {
 
       const response =
         await axios.post(
+
           "https://pradheepsiva.onrender.com/api/user/login",
+
           loginData
+
         );
 
-      /* =========================
-         SAVE USER DATA
-      ========================= */
+      /* SAVE DATA */
 
       localStorage.setItem(
+
         "shopName",
+
         response.data.data.shopName
+
       );
 
       localStorage.setItem(
+
         "role",
+
         response.data.data.role
+
       );
 
       localStorage.setItem(
-        "username",
-        response.data.data.username
-      );
 
-      alert("Login Success");
+        "username",
+
+        response.data.data.username
+
+      );
 
       setMessage(
         "Login Successful"
       );
 
-      /* =========================
-         REDIRECT
-      ========================= */
+      /* REDIRECT */
 
-      if (
-        response.data.data.role ===
-        "admin"
-      ) {
+      setTimeout(() => {
 
-        window.location.href =
-          "/";
+        if (
+          response.data.data.role ===
+          "admin"
+        ) {
 
-      } else {
+          window.location.href =
+            "/";
 
-        window.location.href =
-          "/shopmobiles";
+        } else {
 
-      }
+          window.location.href =
+            "/shopmobiles";
+
+        }
+
+      }, 1000);
 
     } catch (error) {
 
       console.log(error);
 
       setMessage(
-        "Invalid Username Or Password"
-      );
-
-      alert(
         "Invalid Username Or Password"
       );
 
@@ -129,11 +156,27 @@ function ShopLogin() {
 
       <div className="login-container">
 
-        <h2 className="login-title">
+        {/* TOP */}
 
-          Shop Login
+        <div className="login-top">
 
-        </h2>
+          <h1>
+            📱
+          </h1>
+
+          <h2 className="login-title">
+
+            Pradheepsiva Mobiles
+
+          </h2>
+
+          <p>
+            Shop Portal Login
+          </p>
+
+        </div>
+
+        {/* FORM */}
 
         <form
           onSubmit={handleLogin}
@@ -155,16 +198,45 @@ function ShopLogin() {
 
           {/* PASSWORD */}
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter Password"
-            value={
-              loginData.password
-            }
-            onChange={handleChange}
-            required
-          />
+          <div className="password-box">
+
+            <input
+              type={
+                showPassword
+                  ? "text"
+                  : "password"
+              }
+              name="password"
+              placeholder="Enter Password"
+              value={
+                loginData.password
+              }
+              onChange={handleChange}
+              required
+            />
+
+            <span
+              className="show-btn"
+              onClick={() =>
+                setShowPassword(
+                  !showPassword
+                )
+              }
+            >
+
+              {
+
+                showPassword
+
+                  ? "🙈"
+
+                  : "👁️"
+
+              }
+
+            </span>
+
+          </div>
 
           {/* BUTTON */}
 
@@ -173,9 +245,15 @@ function ShopLogin() {
             disabled={loading}
           >
 
-            {loading
-              ? "Logging In..."
-              : "Login"}
+            {
+
+              loading
+
+                ? "Logging In..."
+
+                : "Login"
+
+            }
 
           </button>
 
@@ -183,15 +261,19 @@ function ShopLogin() {
 
         {/* MESSAGE */}
 
-        {message && (
+        {
 
-          <p className="login-message">
+          message && (
 
-            {message}
+            <p className="login-message">
 
-          </p>
+              {message}
 
-        )}
+            </p>
+
+          )
+
+        }
 
       </div>
 

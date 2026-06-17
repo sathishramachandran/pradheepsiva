@@ -1,4 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+} from "react-router-dom";
 
 function Navbar() {
 
@@ -33,6 +36,7 @@ function Navbar() {
   ========================= */
 
   const hideNavbar =
+
     location.pathname ===
     "/shoplogin";
 
@@ -64,7 +68,7 @@ function Navbar() {
 
       <div className="nav-links">
 
-        {/* ADMIN MENU */}
+        {/* ADMIN */}
 
         {
 
@@ -93,17 +97,13 @@ function Navbar() {
                 Mobile List
               </Link>
 
-              <Link to="/admin">
-                Create User
-              </Link>
-
             </>
 
           )
 
         }
 
-        {/* SHOP USER */}
+        {/* SHOP */}
 
         {
 
@@ -128,7 +128,7 @@ function Navbar() {
 
       </div>
 
-      {/* RIGHT SIDE */}
+      {/* RIGHT */}
 
       <div className="nav-right">
 

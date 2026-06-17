@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
+
 import axios from "axios";
 
 function MobileForm() {
+
+  /* =========================
+     STATE
+  ========================= */
 
   const [mobileData, setMobileData] =
     useState({
@@ -20,26 +25,14 @@ function MobileForm() {
 
     });
 
-  /* =========================
-     OTHER ISSUE
-  ========================= */
-
-  const [otherIssue, setOtherIssue] =
-    useState("");
-
-  /* =========================
-     LOADING
-  ========================= */
+  const [shops, setShops] =
+    useState([]);
 
   const [loading, setLoading] =
     useState(false);
 
-  /* =========================
-     SHOPS
-  ========================= */
-
-  const [shops, setShops] =
-    useState([]);
+  const [otherIssue, setOtherIssue] =
+    useState("");
 
   /* =========================
      GET SHOPS
@@ -61,8 +54,6 @@ function MobileForm() {
     } catch (error) {
 
       console.log(error);
-
-      setShops([]);
 
     }
 
@@ -137,7 +128,7 @@ function MobileForm() {
   };
 
   /* =========================
-     HANDLE SUBMIT
+     SUBMIT
   ========================= */
 
   const handleSubmit = async (
@@ -154,8 +145,10 @@ function MobileForm() {
 
       mobileIssue:
         mobileData.mobileIssue ===
-        "Other"
+          "Other"
+
           ? otherIssue
+
           : mobileData.mobileIssue,
 
     };
@@ -170,6 +163,8 @@ function MobileForm() {
       alert(
         "Mobile Added Successfully"
       );
+
+      /* RESET */
 
       setMobileData({
 
@@ -204,38 +199,33 @@ function MobileForm() {
   };
 
   /* =========================
-     PARTS ARRAY
+     PARTS LIST
   ========================= */
 
   const mobilePartsList = [
 
-    "camera",
-
-    "sim tray",
-
-    "button",
+    "Display",
 
     "Battery",
 
-    "Back Door",
 
-    "ringer speaker",
-
-    "center strip",
-
-    "Display",
-
-    "Touch",
-
-    "Charging Pin",
-
-    "Mic",
 
     "Speaker",
 
+
+
+
     "Fingerprint",
 
-    "Motherboard",
+    "Back Door",
+
+    "Camera",
+
+
+
+    "Button",
+
+
 
   ];
 
@@ -250,7 +240,7 @@ function MobileForm() {
       <div className="mobile-form-container">
 
         <h2>
-          Add New Mobile
+          Add Mobile Entry
         </h2>
 
         <form
@@ -275,29 +265,22 @@ function MobileForm() {
 
             {
 
-              Array.isArray(
-                shops
-              ) &&
-                shops.map(
-                  (shop) => (
+              shops.map((shop) => (
 
-                    <option
-                      key={
-                        shop._id
-                      }
-                      value={
-                        shop.shopName
-                      }
-                    >
+                <option
+                  key={shop._id}
+                  value={
+                    shop.shopName
+                  }
+                >
 
-                      {
-                        shop.shopName
-                      }
+                  {
+                    shop.shopName
+                  }
 
-                    </option>
+                </option>
 
-                  )
-                )
+              ))
 
             }
 
@@ -356,16 +339,12 @@ function MobileForm() {
               Display
             </option>
 
-            <option value="Network">
-              Network
-            </option>
-
             <option value="Software">
               Software
             </option>
 
-            <option value="Mic">
-              Mic
+            <option value="Network">
+              Network
             </option>
 
             <option value="Water Lock">
@@ -383,7 +362,7 @@ function MobileForm() {
           {
 
             mobileData.mobileIssue ===
-              "Other" && (
+            "Other" && (
 
               <input
                 type="text"
@@ -406,7 +385,7 @@ function MobileForm() {
           <div className="parts-box">
 
             <h3>
-              Select Mobile Parts
+              Select Parts
             </h3>
 
             <div className="parts-grid">
@@ -467,9 +446,15 @@ function MobileForm() {
             disabled={loading}
           >
 
-            {loading
-              ? "Submitting..."
-              : "Submit"}
+            {
+
+              loading
+
+                ? "Submitting..."
+
+                : "Add Mobile"
+
+            }
 
           </button>
 
@@ -480,6 +465,7 @@ function MobileForm() {
     </section>
 
   );
+
 }
 
 export default MobileForm;
