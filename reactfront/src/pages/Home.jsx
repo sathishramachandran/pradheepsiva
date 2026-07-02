@@ -1,34 +1,21 @@
 import { useEffect, useState } from "react";
-
 import axios from "axios";
 
 function Home() {
 
   /* =========================
-     STATE
+      STATE
   ========================= */
 
-  const [mobiles, setMobiles] =
-    useState([]);
+  const [mobiles, setMobiles] = useState([]);
+  const [shops, setShops] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [shops, setShops] =
-    useState([]);
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const shopName =
-    localStorage.getItem(
-      "shopName"
-    );
-
-  const role =
-    localStorage.getItem(
-      "role"
-    );
+  const shopName = localStorage.getItem("shopName");
+  const role = localStorage.getItem("role");
 
   /* =========================
-     GET DATA
+      GET DATA
   ========================= */
 
   const getData = async () => {
@@ -37,43 +24,26 @@ function Home() {
 
       let mobileResponse;
 
-      /* SHOP LOGIN */
+      if (role === "shop" && shopName) {
 
-      if (
-        role === "shop" &&
-        shopName
-      ) {
-
-        mobileResponse =
-          await axios.get(
-            `https://pradheepsiva.onrender.com/api/mobile/shop/${shopName}`
-          );
-
-      }
-
-      /* ADMIN */
-
-      else {
-
-        mobileResponse =
-          await axios.get(
-            "https://pradheepsiva.onrender.com/api/mobile/all"
-          );
-
-      }
-
-      const shopResponse =
-        await axios.get(
-          "https://pradheepsiva.onrender.com/api/shop/all"
+        mobileResponse = await axios.get(
+          `https://pradheepsiva.onrender.com/api/mobile/shop/${shopName}`
         );
 
-      setMobiles(
-        mobileResponse.data.data || []
+      } else {
+
+        mobileResponse = await axios.get(
+          "https://pradheepsiva.onrender.com/api/mobile/all"
+        );
+
+      }
+
+      const shopResponse = await axios.get(
+        "https://pradheepsiva.onrender.com/api/shop/all"
       );
 
-      setShops(
-        shopResponse.data.data || []
-      );
+      setMobiles(mobileResponse.data.data || []);
+      setShops(shopResponse.data.data || []);
 
     } catch (error) {
 
@@ -88,375 +58,255 @@ function Home() {
   };
 
   /* =========================
-     AUTO REFRESH
+      AUTO REFRESH
   ========================= */
 
   useEffect(() => {
 
     getData();
 
-    const interval =
-      setInterval(() => {
+    const interval = setInterval(() => {
 
-        getData();
+      getData();
 
-      }, 5000);
+    }, 5000);
 
-    return () =>
-      clearInterval(interval);
+    return () => clearInterval(interval);
 
   }, []);
 
   /* =========================
-     COUNTS
+      DASHBOARD COUNTS
   ========================= */
 
-  const totalMobiles =
-    mobiles.length;
+  const totalMobiles = mobiles.length;
 
-  const pendingMobiles =
-    mobiles.filter(
-      (item) =>
-        item.status ===
-        "Pending"
-    ).length;
+  const pendingMobiles = mobiles.filter(
+    (item) => item.status === "Pending"
+  ).length;
 
-  const completedMobiles =
-    mobiles.filter(
-      (item) =>
-        item.status ===
-        "Completed"
-    ).length;
+  const completedMobiles = mobiles.filter(
+    (item) => item.status === "Completed"
+  ).length;
 
-  const deliveryMobiles =
-    mobiles.filter(
-      (item) =>
-        item.status ===
-        "Out Delivery"
-    ).length;
+  const deliveryMobiles = mobiles.filter(
+    (item) => item.status === "Out Delivery"
+  ).length;
 
-  const totalShops =
-    shops.length;
+  const returnMobiles = mobiles.filter(
+    (item) => item.status === "Return"
+  ).length;
 
-  const todayDate =
-    new Date()
-      .toISOString()
-      .split("T")[0];
+  const totalShops = shops.length;
 
-  const todayEntries =
-    mobiles.filter(
-      (item) =>
-        item.entryDate ===
-        todayDate
-    ).length;
+  const todayDate = new Date()
+    .toISOString()
+    .split("T")[0];
+
+  const todayEntries = mobiles.filter(
+    (item) => item.entryDate === todayDate
+  ).length;
 
   /* =========================
-     RECENT ENTRIES
+      RECENT ENTRIES
   ========================= */
 
-  const recentMobiles =
-    mobiles.slice(0, 5);
-
-  /* =========================
-     UI
+  const recentMobiles = mobiles.slice(0, 5);
+    /* =========================
+      UI
   ========================= */
 
   return (
-
     <div className="home-page">
 
-      {/* HEADER */}
+      {/* Header */}
 
       <div className="welcome-box">
 
-        <h1>
-          Welcome To
-          Pradheepsiva Mobiles
-        </h1>
+        <div>
 
-        {
+          <h1>📱 Pradheepsiva Mobiles</h1>
 
-          shopName && (
+          <p>Mobile Service Management System</p>
 
-            <h2>
+          {shopName && (
+            <h3>
+              Welcome,
+              <span> {shopName}</span>
+            </h3>
+          )}
 
-              Shop :
-              {shopName}
-
-            </h2>
-
-          )
-
-        }
+        </div>
 
       </div>
 
-      {/* DASHBOARD */}
+      {/* Dashboard */}
 
       <div className="dashboard-grid">
 
-        {/* TOTAL */}
+        <div className="dashboard-card total-card">
 
-        <div className="dashboard-card">
+          <h4>Total Mobiles</h4>
 
-          <h3>
-            Total Mobiles
-          </h3>
-
-          <h1>
-            {totalMobiles}
-          </h1>
+          <h2>{totalMobiles}</h2>
 
         </div>
-
-        {/* PENDING */}
 
         <div className="dashboard-card pending-card">
 
-          <h3>
-            Pending Repairs
-          </h3>
+          <h4>Pending</h4>
 
-          <h1>
-            {pendingMobiles}
-          </h1>
+          <h2>{pendingMobiles}</h2>
 
         </div>
-
-        {/* COMPLETED */}
 
         <div className="dashboard-card completed-card">
 
-          <h3>
-            Completed Repairs
-          </h3>
+          <h4>Completed</h4>
 
-          <h1>
-            {completedMobiles}
-          </h1>
+          <h2>{completedMobiles}</h2>
 
         </div>
-
-        {/* DELIVERY */}
 
         <div className="dashboard-card delivery-card">
 
-          <h3>
-            Out Delivery
-          </h3>
+          <h4>Out Delivery</h4>
 
-          <h1>
-            {deliveryMobiles}
-          </h1>
+          <h2>{deliveryMobiles}</h2>
 
         </div>
 
-        {/* SHOPS */}
+        <div className="dashboard-card return-card">
 
-        <div className="dashboard-card shop-card">
+          <h4>Returned</h4>
 
-          <h3>
-            Total Shops
-          </h3>
-
-          <h1>
-            {totalShops}
-          </h1>
+          <h2>{returnMobiles}</h2>
 
         </div>
 
-        {/* TODAY */}
+        {role === "admin" && (
+
+          <div className="dashboard-card shop-card">
+
+            <h4>Total Shops</h4>
+
+            <h2>{totalShops}</h2>
+
+          </div>
+
+        )}
 
         <div className="dashboard-card today-card">
 
-          <h3>
-            Today Entries
-          </h3>
+          <h4>Today's Entries</h4>
 
-          <h1>
-            {todayEntries}
-          </h1>
+          <h2>{todayEntries}</h2>
 
         </div>
 
       </div>
 
-      {/* RECENT ENTRIES */}
+      {/* Recent Entries */}
 
       <div className="recent-section">
 
-        <h2>
-          Recent Mobile Entries
-        </h2>
+        <div className="section-header">
 
-        {
+          <h2>Recent Mobile Entries</h2>
 
-          loading ? (
+          <span>Total : {totalMobiles}</span>
 
-            <p>
-              Loading...
-            </p>
+        </div>
 
-          ) : recentMobiles.length ===
-            0 ? (
+        {loading ? (
 
-            <p>
-              No Mobile Entries Found
-            </p>
+          <h3>Loading...</h3>
 
-          ) : (
+        ) : recentMobiles.length === 0 ? (
 
-            <table>
+          <h3>No Records Found</h3>
 
-              <thead>
+        ) : (
 
-                <tr>
+          <table>
 
-                  <th>
-                    Shop
-                  </th>
+            <thead>
 
-                  <th>
-                    Brand
-                  </th>
+              <tr>
 
-                  <th>
-                    Model
-                  </th>
+                <th>Shop</th>
 
-                  <th>
-                    Status
-                  </th>
+                <th>Brand</th>
+
+                <th>Model</th>
+
+                <th>Status</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {recentMobiles.map((item) => (
+
+                <tr key={item._id}>
+
+                  <td>{item.shopName}</td>
+
+                  <td>{item.mobileBrand}</td>
+
+                  <td>{item.mobileModel}</td>
+
+                  <td>
+
+                    <span
+                      className={
+                        item.status === "Completed"
+                          ? "status completed"
+                          : item.status === "Pending"
+                          ? "status pending"
+                          : item.status === "Out Delivery"
+                          ? "status delivery"
+                          : "status returned"
+                      }
+                    >
+
+                      {item.status}
+
+                    </span>
+
+                  </td>
 
                 </tr>
 
-              </thead>
+              ))}
 
-              <tbody>
+            </tbody>
 
-                {
+          </table>
 
-                  recentMobiles.map(
-                    (item) => (
-
-                      <tr
-                        key={
-                          item._id
-                        }
-                      >
-
-                        <td>
-                          {
-                            item.shopName
-                          }
-                        </td>
-
-                        <td>
-                          {
-                            item.mobileBrand
-                          }
-                        </td>
-
-                        <td>
-                          {
-                            item.mobileModel
-                          }
-                        </td>
-
-                        <td>
-
-                          <span
-                            className={
-
-                              item.status ===
-                              "Completed"
-
-                                ? "completed-status"
-
-                                : item.status ===
-                                  "Out Delivery"
-
-                                ? "delivery-status"
-
-                                : item.status ===
-                                  "Return"
-
-                                ? "return-status"
-
-                                : "pending-status"
-
-                            }
-                          >
-
-                            {
-                              item.status
-                            }
-
-                          </span>
-
-                        </td>
-
-                      </tr>
-
-                    )
-                  )
-
-                }
-
-              </tbody>
-
-            </table>
-
-          )
-
-        }
+        )}
 
       </div>
 
-      {/* FOOTER */}
+      {/* Footer */}
 
-      <div className="developer-footer">
+      <footer className="footer">
 
-        <h3>
-          Developed By Sathish
-        </h3>
+        <h3>Pradheepsiva Mobiles</h3>
 
-        <p>
-          📞 9488909434
-        </p>
+        <p>Professional Mobile Service Management Software</p>
 
-        <p className="contact-dev">
+        <p>Developed by Sathish</p>
 
-          🌐 Need Website Or
-          Mobile Shop Software?
+        <p>📞 9488909434</p>
 
-          Contact :
-          9488909434
-
-        </p>
-
-        <h4 className="business-quote">
-
-          "Smart Repair Management
-          For Smart Mobile Business"
-
-        </h4>
-
-        <p className="business-text">
-
-          Helping Mobile Shops
-          Manage Repairs,
-          Delivery, Customers &
-          Service Status
-          Professionally.
-
-        </p>
-
-      </div>
+      </footer>
 
     </div>
-
   );
+
 }
 
 export default Home;
