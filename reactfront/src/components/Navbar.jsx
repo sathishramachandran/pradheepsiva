@@ -96,6 +96,9 @@ function Navbar() {
               <Link to="/mobilelist">
                 Mobile List
               </Link>
+              <Link to="/customer">
+  Customer Entry
+</Link>
 
             </>
 
@@ -152,6 +155,7 @@ function Navbar() {
                 Logout
 
               </button>
+              
 
             </>
 

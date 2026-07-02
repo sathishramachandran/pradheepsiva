@@ -4,9 +4,6 @@ import axios from "axios";
 
 function MobileForm() {
 
-  /* =========================
-     STATE
-  ========================= */
 
   const [mobileData, setMobileData] =
     useState({
@@ -34,9 +31,7 @@ function MobileForm() {
   const [otherIssue, setOtherIssue] =
     useState("");
 
-  /* =========================
-     GET SHOPS
-  ========================= */
+
 
   const getShops = async () => {
 
@@ -65,9 +60,7 @@ function MobileForm() {
 
   }, []);
 
-  /* =========================
-     HANDLE INPUT
-  ========================= */
+
 
   const handleChange = (e) => {
 
