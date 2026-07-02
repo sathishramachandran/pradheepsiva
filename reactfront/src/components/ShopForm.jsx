@@ -1,151 +1,182 @@
 import { useState } from "react";
-
 import axios from "axios";
 
 function ShopForm() {
 
-  /* =========================
-     STATE
-  ========================= */
+  const [loading, setLoading] = useState(false);
 
-  const [loading, setLoading] =
-    useState(false);
+  const [successData, setSuccessData] = useState(null);
 
-  const [successData, setSuccessData] =
-    useState(null);
+  const [shopData, setShopData] = useState({
+    shopName: "",
+    ownerName: "",
+    mobileNumber: "",
+    address: "",
+  });
 
-  const [shopData, setShopData] =
-    useState({
+  const [errors, setErrors] = useState({
+    shopName: "",
+    ownerName: "",
+    mobileNumber: "",
+    address: "",
+  });
 
-      shopName: "",
-
-      ownerName: "",
-
-      mobileNumber: "",
-
-      address: "",
-
-    });
-
-  /* =========================
-     HANDLE CHANGE
-  ========================= */
+  // =========================
+  // HANDLE CHANGE
+  // =========================
 
   const handleChange = (e) => {
 
-    setShopData({
+    const { name, value } = e.target;
 
-      ...shopData,
+    if (name === "shopName") {
 
-      [e.target.name]:
-        e.target.value,
+      setShopData({
+        ...shopData,
+        shopName: value.replace(/[^A-Za-z0-9\s]/g, "")
+      });
 
+    }
+
+    else if (name === "ownerName") {
+
+      setShopData({
+        ...shopData,
+        ownerName: value.replace(/[^A-Za-z\s]/g, "")
+      });
+
+    }
+
+    else if (name === "mobileNumber") {
+
+      const mobile = value.replace(/\D/g, "");
+
+      if (mobile.length <= 10) {
+
+        setShopData({
+          ...shopData,
+          mobileNumber: mobile
+        });
+
+      }
+
+    }
+
+    else {
+
+      setShopData({
+        ...shopData,
+        [name]: value
+      });
+
+    }
+
+    setErrors({
+      ...errors,
+      [name]: ""
     });
 
   };
 
-  /* =========================
-     SUBMIT
-  ========================= */
+  // =========================
+  // VALIDATION
+  // =========================
 
-  const handleSubmit = async (
-    e
-  ) => {
+  const validate = () => {
+
+    let newErrors = {};
+
+    if (!shopData.shopName.trim()) {
+      newErrors.shopName = "Shop Name is required";
+    } else if (shopData.shopName.trim().length < 3) {
+      newErrors.shopName = "Minimum 3 characters";
+    }
+
+    if (!shopData.ownerName.trim()) {
+      newErrors.ownerName = "Owner Name is required";
+    } else if (shopData.ownerName.trim().length < 3) {
+      newErrors.ownerName = "Minimum 3 characters";
+    }
+
+    if (!shopData.mobileNumber) {
+      newErrors.mobileNumber = "Mobile Number is required";
+    } else if (!/^[6-9]\d{9}$/.test(shopData.mobileNumber)) {
+      newErrors.mobileNumber = "Enter valid 10 digit mobile";
+    }
+
+    if (!shopData.address.trim()) {
+      newErrors.address = "Address is required";
+    } else if (shopData.address.trim().length < 10) {
+      newErrors.address = "Minimum 10 characters";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+
+  };
+
+  // =========================
+  // SUBMIT
+  // =========================
+
+  const handleSubmit = async (e) => {
 
     e.preventDefault();
 
-    /* VALIDATION */
-
-    if (
-      shopData.mobileNumber
-        .length !== 10
-    ) {
-
-      return alert(
-        "Mobile Number Must Be 10 Digits"
-      );
-
-    }
+    if (!validate()) return;
 
     setLoading(true);
 
     try {
 
-      /* ADD SHOP */
-
       await axios.post(
-
         "https://pradheepsiva.onrender.com/api/shop/add",
-
         shopData
-
       );
 
-      /* CREATE LOGIN */
+      const username = shopData.shopName
+        .toLowerCase()
+        .replace(/\s/g, "");
 
-      const username =
-
-        shopData.shopName
-          .toLowerCase()
-          .replace(/\s/g, "");
-
-      const password =
-        shopData.mobileNumber;
+      const password = shopData.mobileNumber;
 
       await axios.post(
-
         "https://pradheepsiva.onrender.com/api/user/create",
-
         {
-
-          shopName:
-            shopData.shopName,
-
+          shopName: shopData.shopName,
           username,
-
           password,
-
           role: "shop",
-
         }
-
       );
-
-      /* SUCCESS */
 
       setSuccessData({
-
         username,
-
         password,
-
       });
 
-      alert(
-        "Shop Added Successfully"
-      );
-
-      /* RESET */
+      alert("Shop Added Successfully");
 
       setShopData({
-
         shopName: "",
-
         ownerName: "",
-
         mobileNumber: "",
-
         address: "",
+      });
 
+      setErrors({
+        shopName: "",
+        ownerName: "",
+        mobileNumber: "",
+        address: "",
       });
 
     } catch (error) {
 
       console.log(error);
 
-      alert(
-        "Failed To Add Shop"
-      );
+      alert("Failed To Add Shop");
 
     } finally {
 
@@ -154,21 +185,16 @@ function ShopForm() {
     }
 
   };
-
-  /* =========================
-     UI
-  ========================= */
+    // =========================
+  // UI
+  // =========================
 
   return (
-
     <section className="shop-form-page">
-
       <div className="shop-form-container">
 
         <h2 className="form-title">
-
           Add New Shop
-
         </h2>
 
         <form
@@ -176,129 +202,128 @@ function ShopForm() {
           className="shop-form"
         >
 
-          {/* SHOP */}
+          {/* Shop Name */}
 
           <input
             type="text"
             name="shopName"
             placeholder="Enter Shop Name"
-            value={
-              shopData.shopName
-            }
+            value={shopData.shopName}
             onChange={handleChange}
-            required
           />
 
-          {/* OWNER */}
+          {errors.shopName && (
+            <p
+              style={{
+                color: "red",
+                fontSize: "14px",
+                marginBottom: "10px"
+              }}
+            >
+              {errors.shopName}
+            </p>
+          )}
+
+          {/* Owner Name */}
 
           <input
             type="text"
             name="ownerName"
             placeholder="Enter Owner Name"
-            value={
-              shopData.ownerName
-            }
+            value={shopData.ownerName}
             onChange={handleChange}
-            required
           />
 
-          {/* MOBILE */}
+          {errors.ownerName && (
+            <p
+              style={{
+                color: "red",
+                fontSize: "14px",
+                marginBottom: "10px"
+              }}
+            >
+              {errors.ownerName}
+            </p>
+          )}
+
+          {/* Mobile */}
 
           <input
-            type="number"
+            type="text"
             name="mobileNumber"
             placeholder="Enter Mobile Number"
-            value={
-              shopData.mobileNumber
-            }
+            value={shopData.mobileNumber}
             onChange={handleChange}
-            required
+            maxLength={10}
           />
 
-          {/* ADDRESS */}
+          {errors.mobileNumber && (
+            <p
+              style={{
+                color: "red",
+                fontSize: "14px",
+                marginBottom: "10px"
+              }}
+            >
+              {errors.mobileNumber}
+            </p>
+          )}
+
+          {/* Address */}
 
           <textarea
             name="address"
             rows="4"
             placeholder="Enter Address"
-            value={
-              shopData.address
-            }
+            value={shopData.address}
             onChange={handleChange}
-            required
           />
 
-          {/* BUTTON */}
+          {errors.address && (
+            <p
+              style={{
+                color: "red",
+                fontSize: "14px",
+                marginBottom: "10px"
+              }}
+            >
+              {errors.address}
+            </p>
+          )}
+
+          {/* Button */}
 
           <button
             type="submit"
             disabled={loading}
           >
-
-            {
-
-              loading
-
-                ? "Creating..."
-
-                : "Add Shop"
-
-            }
-
+            {loading ? "Creating..." : "Add Shop"}
           </button>
 
         </form>
 
-        {/* LOGIN DETAILS */}
+        {/* Success Card */}
 
-        {
+        {successData && (
+          <div className="success-card">
 
-          successData && (
+            <h3>Shop Login Created</h3>
 
-            <div className="success-card">
+            <p>
+              <strong>Username :</strong>{" "}
+              {successData.username}
+            </p>
 
-              <h3>
-                Shop Login Created
-              </h3>
+            <p>
+              <strong>Password :</strong>{" "}
+              {successData.password}
+            </p>
 
-              <p>
-
-                <strong>
-                  Username :
-                </strong>
-
-                {" "}
-
-                {
-                  successData.username
-                }
-
-              </p>
-
-              <p>
-
-                <strong>
-                  Password :
-                </strong>
-
-                {" "}
-
-                {
-                  successData.password
-                }
-
-              </p>
-
-            </div>
-
-          )
-
-        }
+          </div>
+        )}
 
       </div>
-
     </section>
-
   );
 }
 

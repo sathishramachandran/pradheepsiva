@@ -95,12 +95,13 @@ function AddCustomer() {
   };
 
   return (
-    <div className="container mt-4">
+    <section className="mobile-form-page">
+    <div className="mobile-form-container">
       <h2>Customer Entry</h2>
 
       {/* Customer Name */}
       <input
-        className="form-control"
+        className="mobile-form"
         placeholder="Customer Name"
         value={form.customerName}
         onChange={(e) =>
@@ -111,7 +112,7 @@ function AddCustomer() {
 
       {/* Mobile Number */}
       <input
-        className="form-control mt-2"
+        className="mobile-form"
         placeholder="Mobile Number"
         value={form.mobileNumber}
         onChange={(e) =>
@@ -122,7 +123,7 @@ function AddCustomer() {
 
       {/* Mobile Brand */}
       <input
-        className="form-control mt-2"
+        className="mobile-form"
         placeholder="Mobile Brand"
         value={form.mobileBrand}
         onChange={(e) =>
@@ -133,7 +134,7 @@ function AddCustomer() {
 
       {/* Mobile Model */}
       <input
-        className="form-control mt-2"
+        className="mobile-form"
         placeholder="Mobile Model"
         value={form.mobileModel}
         onChange={(e) =>
@@ -144,7 +145,7 @@ function AddCustomer() {
 
       {/* Issue */}
       <textarea
-        className="form-control mt-2"
+        className="mobile-form"
         placeholder="Issue"
         value={form.issue}
         onChange={(e) =>
@@ -156,7 +157,7 @@ function AddCustomer() {
       {/* Repair Amount */}
       <input
         type="number"
-        className="form-control mt-2"
+        className="mobile-form"
         placeholder="Repair Amount"
         value={form.amount}
         onChange={(e) =>
@@ -168,7 +169,7 @@ function AddCustomer() {
       {/* Advance Amount */}
       <input
         type="number"
-        className="form-control mt-2"
+        className="mobile-form"
         placeholder="Advance Amount"
         value={form.advance}
         onChange={(e) =>
@@ -184,6 +185,7 @@ function AddCustomer() {
         Save Customer
       </button>
     </div>
+    </section>
   );
 }
 
