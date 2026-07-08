@@ -2,7 +2,6 @@ import { useState } from "react";
 import axios from "axios";
 
 function ShopForm() {
-
   const [loading, setLoading] = useState(false);
 
   const [successData, setSuccessData] = useState(null);
@@ -26,56 +25,38 @@ function ShopForm() {
   // =========================
 
   const handleChange = (e) => {
-
     const { name, value } = e.target;
 
     if (name === "shopName") {
-
       setShopData({
         ...shopData,
-        shopName: value.replace(/[^A-Za-z0-9\s]/g, "")
+        shopName: value.replace(/[^A-Za-z0-9\s]/g, ""),
       });
-
-    }
-
-    else if (name === "ownerName") {
-
+    } else if (name === "ownerName") {
       setShopData({
         ...shopData,
-        ownerName: value.replace(/[^A-Za-z\s]/g, "")
+        ownerName: value.replace(/[^A-Za-z\s]/g, ""),
       });
-
-    }
-
-    else if (name === "mobileNumber") {
-
+    } else if (name === "mobileNumber") {
       const mobile = value.replace(/\D/g, "");
 
       if (mobile.length <= 10) {
-
         setShopData({
           ...shopData,
-          mobileNumber: mobile
+          mobileNumber: mobile,
         });
-
       }
-
-    }
-
-    else {
-
+    } else {
       setShopData({
         ...shopData,
-        [name]: value
+        [name]: value,
       });
-
     }
 
     setErrors({
       ...errors,
-      [name]: ""
+      [name]: "",
     });
-
   };
 
   // =========================
@@ -83,7 +64,6 @@ function ShopForm() {
   // =========================
 
   const validate = () => {
-
     let newErrors = {};
 
     if (!shopData.shopName.trim()) {
@@ -113,7 +93,6 @@ function ShopForm() {
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
-
   };
 
   // =========================
@@ -121,7 +100,6 @@ function ShopForm() {
   // =========================
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     if (!validate()) return;
@@ -129,27 +107,21 @@ function ShopForm() {
     setLoading(true);
 
     try {
-
       await axios.post(
         "https://pradheepsiva.onrender.com/api/shop/add",
-        shopData
+        shopData,
       );
 
-      const username = shopData.shopName
-        .toLowerCase()
-        .replace(/\s/g, "");
+      const username = shopData.shopName.toLowerCase().replace(/\s/g, "");
 
       const password = shopData.mobileNumber;
 
-      await axios.post(
-        "https://pradheepsiva.onrender.com/api/user/create",
-        {
-          shopName: shopData.shopName,
-          username,
-          password,
-          role: "shop",
-        }
-      );
+      await axios.post("https://pradheepsiva.onrender.com/api/user/create", {
+        shopName: shopData.shopName,
+        username,
+        password,
+        role: "shop",
+      });
 
       setSuccessData({
         username,
@@ -171,37 +143,24 @@ function ShopForm() {
         mobileNumber: "",
         address: "",
       });
-
     } catch (error) {
-
       console.log(error);
 
       alert("Failed To Add Shop");
-
     } finally {
-
       setLoading(false);
-
     }
-
   };
-    // =========================
+  // =========================
   // UI
   // =========================
 
   return (
     <section className="shop-form-page">
       <div className="shop-form-container">
+        <h2 className="form-title">Add New Shop</h2>
 
-        <h2 className="form-title">
-          Add New Shop
-        </h2>
-
-        <form
-          onSubmit={handleSubmit}
-          className="shop-form"
-        >
-
+        <form onSubmit={handleSubmit} className="shop-form">
           {/* Shop Name */}
 
           <input
@@ -217,7 +176,7 @@ function ShopForm() {
               style={{
                 color: "red",
                 fontSize: "14px",
-                marginBottom: "10px"
+                marginBottom: "10px",
               }}
             >
               {errors.shopName}
@@ -239,7 +198,7 @@ function ShopForm() {
               style={{
                 color: "red",
                 fontSize: "14px",
-                marginBottom: "10px"
+                marginBottom: "10px",
               }}
             >
               {errors.ownerName}
@@ -262,7 +221,7 @@ function ShopForm() {
               style={{
                 color: "red",
                 fontSize: "14px",
-                marginBottom: "10px"
+                marginBottom: "10px",
               }}
             >
               {errors.mobileNumber}
@@ -284,7 +243,7 @@ function ShopForm() {
               style={{
                 color: "red",
                 fontSize: "14px",
-                marginBottom: "10px"
+                marginBottom: "10px",
               }}
             >
               {errors.address}
@@ -293,35 +252,26 @@ function ShopForm() {
 
           {/* Button */}
 
-          <button
-            type="submit"
-            disabled={loading}
-          >
+          <button type="submit" disabled={loading}>
             {loading ? "Creating..." : "Add Shop"}
           </button>
-
         </form>
 
         {/* Success Card */}
 
         {successData && (
           <div className="success-card">
-
             <h3>Shop Login Created</h3>
 
             <p>
-              <strong>Username :</strong>{" "}
-              {successData.username}
+              <strong>Username :</strong> {successData.username}
             </p>
 
             <p>
-              <strong>Password :</strong>{" "}
-              {successData.password}
+              <strong>Password :</strong> {successData.password}
             </p>
-
           </div>
         )}
-
       </div>
     </section>
   );
