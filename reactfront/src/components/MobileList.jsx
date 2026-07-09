@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import axios from "axios";
 
 function MobileList() {
@@ -7,14 +8,17 @@ function MobileList() {
      STATE
   ========================= */
 
-  const [mobiles, setMobiles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [mobiles, setMobiles] =
+    useState([]);
 
-  const [search, setSearch] = useState("");
+  const [loading, setLoading] =
+    useState(true);
 
-  const [filterStatus, setFilterStatus] = useState("All");
+  const [search, setSearch] =
+    useState("");
 
-  const [processing, setProcessing] = useState(false);
+  const [filterStatus, setFilterStatus] =
+    useState("All");
 
   /* =========================
      GET MOBILES
@@ -24,11 +28,14 @@ function MobileList() {
 
     try {
 
-      const response = await axios.get(
-        "https://pradheepsiva.onrender.com/api/mobile/all"
-      );
+      const response =
+        await axios.get(
+          "https://pradheepsiva.onrender.com/api/mobile/all"
+        );
 
-      setMobiles(response.data.data || []);
+      setMobiles(
+        response.data.data || []
+      );
 
     } catch (error) {
 
@@ -52,13 +59,15 @@ function MobileList() {
 
     getMobiles();
 
-    const interval = setInterval(() => {
+    const interval =
+      setInterval(() => {
 
-      getMobiles();
+        getMobiles();
 
-    }, 5000);
+      }, 5000);
 
-    return () => clearInterval(interval);
+    return () =>
+      clearInterval(interval);
 
   }, []);
 
@@ -66,25 +75,17 @@ function MobileList() {
      DELETE MOBILE
   ========================= */
 
-  const deleteMobile = async (id) => {
+  const deleteMobile = async (
+    id
+  ) => {
 
-    if (!id) {
+    const confirmDelete =
+      window.confirm(
+        "Are You Sure Want To Delete?"
+      );
 
-      alert("Invalid Mobile ID");
-
+    if (!confirmDelete)
       return;
-
-    }
-
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this mobile?"
-    );
-
-    if (!confirmDelete) return;
-
-    if (processing) return;
-
-    setProcessing(true);
 
     try {
 
@@ -92,19 +93,15 @@ function MobileList() {
         `https://pradheepsiva.onrender.com/api/mobile/delete/${id}`
       );
 
-      alert("Mobile Deleted Successfully");
+      alert(
+        "Mobile Deleted Successfully"
+      );
 
       getMobiles();
 
     } catch (error) {
 
       console.log(error);
-
-      alert("Delete Failed");
-
-    } finally {
-
-      setProcessing(false);
 
     }
 
@@ -114,34 +111,10 @@ function MobileList() {
      UPDATE STATUS
   ========================= */
 
-  const updateStatus = async (id, status) => {
-
-    if (!id) {
-
-      alert("Invalid Mobile");
-
-      return;
-
-    }
-
-    const validStatus = [
-      "Pending",
-      "Completed",
-      "Return",
-      "Out Delivery",
-    ];
-
-    if (!validStatus.includes(status)) {
-
-      alert("Invalid Status");
-
-      return;
-
-    }
-
-    if (processing) return;
-
-    setProcessing(true);
+  const updateStatus = async (
+    id,
+    status
+  ) => {
 
     try {
 
@@ -152,7 +125,9 @@ function MobileList() {
         }
       );
 
-      alert(`Status Updated to ${status}`);
+      alert(
+        `Status Updated To ${status}`
+      );
 
       getMobiles();
 
@@ -160,90 +135,122 @@ function MobileList() {
 
       console.log(error);
 
-      alert("Status Update Failed");
-
-    } finally {
-
-      setProcessing(false);
-
     }
 
   };
-    /* =========================
-     SEARCH & FILTER
+
+  /* =========================
+     FILTER
   ========================= */
 
-  const filteredMobiles = mobiles.filter((mobile) => {
+  const filteredMobiles =
+    mobiles.filter(
+      (mobile) => {
 
-    const searchText = search.trim().toLowerCase();
+        const searchMatch =
 
-    const searchMatch =
+          mobile.shopName
+            ?.toLowerCase()
+            .includes(
+              search.toLowerCase()
+            ) ||
 
-      mobile.shopName?.toLowerCase().includes(searchText) ||
+          mobile.mobileBrand
+            ?.toLowerCase()
+            .includes(
+              search.toLowerCase()
+            ) ||
 
-      mobile.mobileBrand?.toLowerCase().includes(searchText) ||
+          mobile.mobileModel
+            ?.toLowerCase()
+            .includes(
+              search.toLowerCase()
+            );
 
-      mobile.mobileModel?.toLowerCase().includes(searchText) ||
+        const statusMatch =
 
-      mobile.mobileIssue?.toLowerCase().includes(searchText);
+          filterStatus ===
+          "All"
 
-    const statusMatch =
-      filterStatus === "All"
-        ? true
-        : mobile.status === filterStatus;
+            ? true
 
-    return searchMatch && statusMatch;
+            : mobile.status ===
+              filterStatus;
 
-  });
+        return (
+          searchMatch &&
+          statusMatch
+        );
+
+      }
+    );
 
   /* =========================
      GROUP BY SHOP
   ========================= */
 
-  const groupedMobiles = filteredMobiles.reduce(
+  const groupedMobiles =
+    filteredMobiles.reduce(
 
-    (groups, mobile) => {
+      (groups, mobile) => {
 
-      if (!groups[mobile.shopName]) {
+        if (
+          !groups[
+            mobile.shopName
+          ]
+        ) {
 
-        groups[mobile.shopName] = [];
+          groups[
+            mobile.shopName
+          ] = [];
 
-      }
+        }
 
-      groups[mobile.shopName].push(mobile);
+        groups[
+          mobile.shopName
+        ].push(mobile);
 
-      return groups;
+        return groups;
 
-    },
+      },
 
-    {}
+      {}
 
-  );
+    );
 
   /* =========================
      STATUS CLASS
   ========================= */
 
-  const getStatusClass = (status) => {
+  const getStatusClass = (
+    status
+  ) => {
 
-    switch (status) {
+    if (
+      status === "Completed"
+    ) {
 
-      case "Completed":
-        return "completed";
-
-      case "Pending":
-        return "pending";
-
-      case "Return":
-        return "return";
-
-      case "Out Delivery":
-        return "delivery";
-
-      default:
-        return "pending";
+      return "completed";
 
     }
+
+    if (
+      status === "Pending"
+    ) {
+
+      return "pending";
+
+    }
+
+    if (
+      status === "Return"
+    ) {
+
+      return "return";
+
+    }
+
+    return "delivery";
 
   };
 
@@ -255,47 +262,63 @@ function MobileList() {
 
     <div className="mobile-list-page">
 
-      <div className="page-header">
+      {/* TITLE */}
 
-        <h1>📱 Mobile Repair List</h1>
+      <h1 className="main-title">
 
-        <p>Total Records : {filteredMobiles.length}</p>
+        Mobile Repair List
 
-      </div>
+      </h1>
 
-      {/* SEARCH & FILTER */}
+      {/* SEARCH */}
 
       <div className="top-controls">
 
         <input
           type="text"
-          placeholder="Search Shop / Brand / Model / Issue"
+          placeholder="Search Shop / Brand / Model"
           value={search}
           onChange={(e) =>
-            setSearch(e.target.value.trimStart())
+            setSearch(
+              e.target.value
+            )
           }
         />
 
         <select
           value={filterStatus}
           onChange={(e) =>
-            setFilterStatus(e.target.value)
+            setFilterStatus(
+              e.target.value
+            )
           }
         >
 
-          <option value="All">All Status</option>
+          <option value="All">
+            All Status
+          </option>
 
-          <option value="Pending">Pending</option>
+          <option value="Pending">
+            Pending
+          </option>
 
-          <option value="Completed">Completed</option>
+          <option value="Completed">
+            Completed
+          </option>
 
-          <option value="Return">Return</option>
+          <option value="Return">
+            Return
+          </option>
 
-          <option value="Out Delivery">Out Delivery</option>
+          <option value="Out Delivery">
+            Delivery
+          </option>
 
         </select>
 
       </div>
+
+      {/* LOADING */}
 
       {
 
@@ -307,7 +330,9 @@ function MobileList() {
 
           </h2>
 
-        ) : Object.keys(groupedMobiles).length === 0 ? (
+        ) : Object.keys(
+            groupedMobiles
+          ).length === 0 ? (
 
           <h2 className="empty-text">
 
@@ -317,167 +342,292 @@ function MobileList() {
 
         ) : (
 
-          Object.keys(groupedMobiles).map((shopName) => (
+          Object.keys(
+            groupedMobiles
+          ).map(
+            (shopName) => (
 
-            <div
-              key={shopName}
-              className="shop-section"
-            >
+              <div
+                key={shopName}
+                className="shop-section"
+              >
 
-              <h2 className="shop-title">
+                {/* SHOP TITLE */}
 
-                🏪 {shopName}
+                <h2 className="shop-title">
 
-              </h2>
+                  {shopName}
 
-              <div className="mobile-grid">
-                {groupedMobiles[shopName].map((mobile) => {
+                </h2>
 
-  const today = new Date();
+                {/* GRID */}
 
-  const entryDate = new Date(mobile.entryDate);
+                <div className="mobile-grid">
 
-  const diffTime = today - entryDate;
+                  {
 
-  const diffDays = Math.floor(
-    diffTime / (1000 * 60 * 60 * 24)
-  );
+                    groupedMobiles[
+                      shopName
+                    ].map(
+                      (
+                        mobile
+                      ) => {
 
-  return (
+                        const today =
+                          new Date();
 
-    <div
-      className="mobile-card"
-      key={mobile._id}
-    >
+                        const entryDate =
+                          new Date(
+                            mobile.entryDate
+                          );
 
-      <h2>{mobile.mobileBrand}</h2>
+                        const diffTime =
+                          today -
+                          entryDate;
 
-      <p>
-        <strong>Model :</strong>
-        {mobile.mobileModel}
-      </p>
+                        const diffDays =
+                          Math.floor(
+                            diffTime /
+                              (1000 *
+                                60 *
+                                60 *
+                                24)
+                          );
 
-      <p>
-        <strong>Issue :</strong>
-        {mobile.mobileIssue}
-      </p>
+                        return (
 
-      <p>
-        <strong>Parts :</strong>
+                          <div
+                            className="mobile-card"
+                            key={
+                              mobile._id
+                            }
+                          >
 
-        {Array.isArray(mobile.mobileParts)
-          ? mobile.mobileParts.join(", ")
-          : "No Parts"}
-      </p>
+                            {/* BRAND */}
 
-      <p>
-        <strong>Entry :</strong>
-        {mobile.entryDate}
-      </p>
+                            <h2>
 
-      <p>
-        <strong>Remaining :</strong>
-        {mobile.remainingDays || 0} Days
-      </p>
+                              {
+                                mobile.mobileBrand
+                              }
 
-      <div
-        className={`status-box ${getStatusClass(
-          mobile.status
-        )}`}
-      >
-        {mobile.status}
-      </div>
+                            </h2>
 
-      {mobile.status !== "Completed" &&
-        diffDays >= 3 && (
+                       
 
-        <p className="alert-text">
+                        
 
-          🔴 Pending More Than 3 Days
+                            {/* MODEL */}
 
-        </p>
+                            <p>
 
-      )}
+                              <strong>
+                                Model :
+                              </strong>
 
-      <div className="btn-group">
+                              {
+                                mobile.mobileModel
+                              }
 
-        <button
-          className="pending-btn"
-          disabled={processing}
-          onClick={() =>
-            updateStatus(
-              mobile._id,
-              "Pending"
-            )
-          }
-        >
-          Pending
-        </button>
+                            </p>
 
-        <button
-          className="return-btn"
-          disabled={processing}
-          onClick={() =>
-            updateStatus(
-              mobile._id,
-              "Return"
-            )
-          }
-        >
-          Return
-        </button>
+                            {/* ISSUE */}
 
-        <button
-          className="complete-btn"
-          disabled={processing}
-          onClick={() =>
-            updateStatus(
-              mobile._id,
-              "Completed"
-            )
-          }
-        >
-          Completed
-        </button>
+                            <p>
 
-        <button
-          className="delivery-btn"
-          disabled={processing}
-          onClick={() =>
-            updateStatus(
-              mobile._id,
-              "Out Delivery"
-            )
-          }
-        >
-          Delivery
-        </button>
+                              <strong>
+                                Issue :
+                              </strong>
 
-        <button
-          className="delete-btn"
-          disabled={processing}
-          onClick={() =>
-            deleteMobile(
-              mobile._id
-            )
-          }
-        >
-          Delete
-        </button>
+                              {
+                                mobile.mobileIssue
+                              }
 
-      </div>
+                            </p>
 
-    </div>
+                       
 
-  );
+                            {/* PARTS */}
 
-})}
+                            <p>
+
+                              <strong>
+                                Parts :
+                              </strong>
+
+                              {
+
+                                Array.isArray(
+                                  mobile.mobileParts
+                                )
+
+                                  ? mobile.mobileParts.join(
+                                      ", "
+                                    )
+
+                                  : ""
+
+                              }
+
+                            </p>
+
+                            {/* DATE */}
+
+                            <p>
+
+                              <strong>
+                                Entry :
+                              </strong>
+
+                              {
+                                mobile.entryDate
+                              }
+
+                            </p>
+
+                            {/* REMAINING */}
+
+                            <p>
+
+                              <strong>
+                                Remaining :
+                              </strong>
+
+                              {
+
+                                mobile.remainingDays || 0
+
+                              }
+
+                              {" "}Days
+
+                            </p>
+
+                            {/* STATUS */}
+
+                            <div
+                              className={`status-box ${getStatusClass(
+                                mobile.status
+                              )}`}
+                            >
+
+                              {
+                                mobile.status
+                              }
+
+                            </div>
+
+                            {/* ALERT */}
+
+                            {
+
+                              mobile.status !==
+                                "Completed" &&
+                                diffDays >=
+                                  3 && (
+
+                                  <p className="alert-text">
+
+                                    🔴 Repair Pending More Than 3 Days
+
+                                  </p>
+
+                                )
+
+                            }
+
+                            {/* BUTTONS */}
+
+                            <div className="btn-group">
+
+                              <button
+                                className="pending-btn"
+                                onClick={() =>
+                                  updateStatus(
+                                    mobile._id,
+                                    "Pending"
+                                  )
+                                }
+                              >
+
+                                Pending
+
+                              </button>
+
+                              <button
+                                className="return-btn"
+                                onClick={() =>
+                                  updateStatus(
+                                    mobile._id,
+                                    "Return"
+                                  )
+                                }
+                              >
+
+                                Return
+
+                              </button>
+
+                              <button
+                                className="complete-btn"
+                                onClick={() =>
+                                  updateStatus(
+                                    mobile._id,
+                                    "Completed"
+                                  )
+                                }
+                              >
+
+                                Completed
+
+                              </button>
+
+                              <button
+                                className="delivery-btn"
+                                onClick={() =>
+                                  updateStatus(
+                                    mobile._id,
+                                    "Out Delivery"
+                                  )
+                                }
+                              >
+
+                                Delivery
+
+                              </button>
+
+                              <button
+                                className="delete-btn"
+                                onClick={() =>
+                                  deleteMobile(
+                                    mobile._id
+                                  )
+                                }
+                              >
+
+                                Delete
+
+                              </button>
+
+                            </div>
+
+                          </div>
+
+                        );
+
+                      }
+
+                    )
+
+                  }
+
+                </div>
 
               </div>
 
-            </div>
+            )
 
-          ))
+          )
 
         )
 
@@ -490,4 +640,3 @@ function MobileList() {
 }
 
 export default MobileList;
-             

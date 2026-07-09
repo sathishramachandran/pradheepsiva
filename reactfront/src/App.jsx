@@ -18,11 +18,12 @@ import ShopLogin from "./pages/ShopLogin";
 
 import ShopMobiles from "./pages/ShopMobiles";
 
-import AddCustomer from "./components/AddCustomer";
-
 function App() {
+
   return (
+
     <div>
+
       <h1 className="title1">
         PRADHEEPSIVA MOBILES
       </h1>
@@ -30,28 +31,51 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<Home />} />
-
-        <Route path="/shop" element={<ShopForm />} />
-
-        <Route path="/mobile" element={<MobileForm />} />
-
-        <Route path="/shoplist" element={<ShopList />} />
-
-        <Route path="/mobilelist" element={<MobileList />} />
-
-        <Route path="/admin" element={<AdminCreateUser />} />
-
-        <Route path="/shoplogin" element={<ShopLogin />} />
-
-        <Route path="/shopmobiles" element={<ShopMobiles />} />
 
         <Route
-          path="/customer"
-          element={<AddCustomer />}
+          path="/"
+          element={<Home />}
         />
+
+        <Route
+          path="/shop"
+          element={<ShopForm />}
+        />
+
+        <Route
+          path="/mobile"
+          element={<MobileForm />}
+        />
+
+        <Route
+          path="/shoplist"
+          element={<ShopList />}
+        />
+
+        <Route
+          path="/mobilelist"
+          element={<MobileList />}
+        />
+
+        <Route
+          path="/admin"
+          element={<AdminCreateUser />}
+        />
+
+        <Route
+          path="/shoplogin"
+          element={<ShopLogin />}
+        />
+
+        <Route
+          path="/shopmobiles"
+          element={<ShopMobiles />}
+        />
+
       </Routes>
+
     </div>
+
   );
 }
 

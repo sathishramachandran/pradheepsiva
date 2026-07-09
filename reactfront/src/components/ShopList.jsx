@@ -12,6 +12,17 @@ function ShopList() {
   const [search, setSearch] =
     useState("");
 
+  const [editShopId, setEditShopId] =
+    useState(null);
+
+  const [editData, setEditData] =
+    useState({
+      shopName: "",
+      ownerName: "",
+      mobileNumber: "",
+      address: "",
+    });
+
   /* =========================
      GET SHOPS
   ========================= */
@@ -87,6 +98,57 @@ function ShopList() {
 
     }
 
+  };
+
+  const handleEditClick = (shop) => {
+    setEditShopId(shop._id);
+    setEditData({
+      shopName: shop.shopName || "",
+      ownerName: shop.ownerName || "",
+      mobileNumber: shop.mobileNumber || "",
+      address: shop.address || "",
+    });
+  };
+
+  const handleEditChange = (e) => {
+    setEditData({
+      ...editData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditShopId(null);
+    setEditData({
+      shopName: "",
+      ownerName: "",
+      mobileNumber: "",
+      address: "",
+    });
+  };
+
+  const updateShop = async (e) => {
+    e.preventDefault();
+
+    if (editData.mobileNumber.length !== 10) {
+      return alert(
+        "Mobile Number Must Be 10 Digits"
+      );
+    }
+
+    try {
+      await axios.put(
+        `https://pradheepsiva.onrender.com/api/shop/update/${editShopId}`,
+        editData
+      );
+
+      alert("Shop Updated Successfully");
+      cancelEdit();
+      getShops();
+    } catch (error) {
+      console.log(error);
+      alert("Update Failed");
+    }
   };
 
   /* =========================
@@ -229,6 +291,19 @@ function ShopList() {
                     <div className="shop-btn-group">
 
                       <button
+                        className="edit-btn"
+                        onClick={() =>
+                          handleEditClick(
+                            shop
+                          )
+                        }
+                      >
+
+                        Edit
+
+                      </button>
+
+                      <button
                         className="delete-btn"
                         onClick={() =>
                           deleteShop(
@@ -242,6 +317,64 @@ function ShopList() {
                       </button>
 
                     </div>
+
+                    {editShopId === shop._id && (
+                      <form
+                        className="shop-edit-form"
+                        onSubmit={updateShop}
+                      >
+                        <h3>Edit Shop Details</h3>
+
+                        <input
+                          type="text"
+                          name="shopName"
+                          placeholder="Shop Name"
+                          value={editData.shopName}
+                          onChange={handleEditChange}
+                          required
+                        />
+
+                        <input
+                          type="text"
+                          name="ownerName"
+                          placeholder="Owner Name"
+                          value={editData.ownerName}
+                          onChange={handleEditChange}
+                          required
+                        />
+
+                        <input
+                          type="number"
+                          name="mobileNumber"
+                          placeholder="Mobile Number"
+                          value={editData.mobileNumber}
+                          onChange={handleEditChange}
+                          required
+                        />
+
+                        <textarea
+                          name="address"
+                          rows="3"
+                          placeholder="Address"
+                          value={editData.address}
+                          onChange={handleEditChange}
+                          required
+                        />
+
+                        <div className="shop-edit-actions">
+                          <button type="submit">
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            className="cancel-btn"
+                            onClick={cancelEdit}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
+                    )}
 
                   </div>
 

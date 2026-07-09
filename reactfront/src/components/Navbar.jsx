@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Link,
   useLocation,
@@ -6,16 +5,18 @@ import {
 
 function Navbar() {
 
-  const location = useLocation();
-
-  const [menuOpen, setMenuOpen] =
-    useState(false);
+  const location =
+    useLocation();
 
   const shopName =
-    localStorage.getItem("shopName");
+    localStorage.getItem(
+      "shopName"
+    );
 
   const role =
-    localStorage.getItem("role");
+    localStorage.getItem(
+      "role"
+    );
 
   /* =========================
      LOGOUT
@@ -24,8 +25,6 @@ function Navbar() {
   const logout = () => {
 
     localStorage.clear();
-
-    setMenuOpen(false);
 
     window.location.href =
       "/shoplogin";
@@ -37,6 +36,7 @@ function Navbar() {
   ========================= */
 
   const hideNavbar =
+
     location.pathname ===
     "/shoplogin";
 
@@ -58,39 +58,15 @@ function Navbar() {
 
       <div className="nav-logo">
 
-        <Link
-          to="/"
-          onClick={() =>
-            setMenuOpen(false)
-          }
-        >
-          📱 Pradheepsiva Mobiles
+        <Link to="/">
+          Pradheepsiva Mobiles
         </Link>
-
-      </div>
-
-      {/* HAMBURGER */}
-
-      <div
-        className="menu-icon"
-        onClick={() =>
-          setMenuOpen(!menuOpen)
-        }
-      >
-
-        ☰
 
       </div>
 
       {/* MENU */}
 
-      <div
-        className={`nav-links ${
-          menuOpen
-            ? "active"
-            : ""
-        }`}
-      >
+      <div className="nav-links">
 
         {/* ADMIN */}
 
@@ -101,58 +77,24 @@ function Navbar() {
 
             <>
 
-              <Link
-                to="/"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-              >
+              <Link to="/">
                 Home
               </Link>
 
-              <Link
-                to="/shop"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-              >
+              <Link to="/shop">
                 Add Shop
               </Link>
 
-              <Link
-                to="/mobile"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-              >
+              <Link to="/mobile">
                 Add Mobile
               </Link>
 
-              <Link
-                to="/shoplist"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-              >
+              <Link to="/shoplist">
                 Shop List
               </Link>
 
-              <Link
-                to="/mobilelist"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-              >
+              <Link to="/mobilelist">
                 Mobile List
-              </Link>
-
-              <Link
-                to="/customer"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-              >
-                Customer Entry
               </Link>
 
             </>
@@ -162,34 +104,25 @@ function Navbar() {
         }
 
         {/* SHOP */}
-                {
+
+        {
 
           role === "shop" &&
-          shopName && (
+            shopName && (
 
-            <>
+              <>
 
-              <Link
-                to="/"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-              >
-                Home
-              </Link>
+                <Link to="/">
+                  Home
+                </Link>
 
-              <Link
-                to="/shopmobiles"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-              >
-                My Mobiles
-              </Link>
+                <Link to="/shopmobiles">
+                  My Mobiles
+                </Link>
 
-            </>
+              </>
 
-          )
+            )
 
         }
 
@@ -207,7 +140,7 @@ function Navbar() {
 
               <span className="shop-user">
 
-                👤 {shopName}
+                {shopName}
 
               </span>
 
@@ -242,7 +175,6 @@ function Navbar() {
     </nav>
 
   );
-
 }
 
 export default Navbar;
